@@ -1,0 +1,10 @@
+(defproject book "0.1.0-SNAPSHOT"
+  :description "FIXME: write description"
+  :url "https://github.com/mdssjc/mds-lisp"
+  :license {:name "Eclipse Public License"
+            :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :dependencies [[org.clojure/clojure "1.10.0-alpha4"]
+                 [quil "2.7.1"]]
+  :plugins [[refactor-nrepl    "2.4.0-SNAPSHOT"]
+            [cider/cider-nrepl "0.18.0-SNAPSHOT"]]
+  :main book.core)
