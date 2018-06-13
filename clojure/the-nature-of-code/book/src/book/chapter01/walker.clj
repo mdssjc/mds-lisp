@@ -30,10 +30,10 @@
   (q/stroke 0)
   (q/point (-> @w :x) (-> @w :y)))
 
-(defn step [w]
+(defn step [w func]
   (let [wx (-> @w :x)
         wy (-> @w :y)
-        [x y] (rnd-8b wx wy)]
+        [x y] (func wx wy)]
     (swap! w assoc :x x)
     (swap! w assoc :y y)))
 
@@ -45,7 +45,7 @@
   (q/background 255))
 
 (defn draw []
-  (step    w)
+  (step    w rnd-8b)
   (display w))
 
 (q/defsketch run
