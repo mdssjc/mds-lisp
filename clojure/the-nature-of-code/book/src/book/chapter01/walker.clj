@@ -28,20 +28,18 @@
 
 (defn display [w]
   (q/stroke 0)
-  (q/point (-> @w :x) (-> @w :y)))
+  (q/point (-> @w :x)
+           (-> @w :y)))
 
 (defn step [w func]
-  (let [wx (-> @w :x)
-        wy (-> @w :y)
-        [x y] (func wx wy)]
-    (swap! w assoc :x x)
-    (swap! w assoc :y y)))
+  (let [[x y] (func (-> @w :x)
+                    (-> @w :y))]
+    (swap! w assoc :x x :y y)))
 
 (def w (atom (Walker. 0 0)))
 
 (defn setup []
-  (swap! w assoc :x (/ WIDTH  2))
-  (swap! w assoc :y (/ HEIGHT 2))
+  (swap! w assoc :x (/ WIDTH 2.0) :y (/ HEIGHT 2.0))
   (q/background 255))
 
 (defn draw []
