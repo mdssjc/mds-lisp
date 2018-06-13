@@ -2,6 +2,8 @@
   (:require [quil.core :as q]
             [quil.middleware :as m]))
 
+;; Example I.1: Traditional random walk
+
 (def WIDTH  640)
 (def HEIGHT 360)
 
