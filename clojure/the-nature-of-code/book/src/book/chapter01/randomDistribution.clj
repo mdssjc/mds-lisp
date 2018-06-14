@@ -17,13 +17,13 @@
 (defn draw []
   (q/background 255)
   (q/stroke 0)
-  (q/fill 175) 
-  
+  (q/fill 175)
+
   (let [length (count @randomCounts)
         index  (int (q/random length))
         w      (/ WIDTH length)]
     (swap! randomCounts update index inc)
-    
+
     (dotimes [x length]
       (let [element (get @randomCounts x)]
         (q/rect (* x w)
