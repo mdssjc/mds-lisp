@@ -1,6 +1,5 @@
 (ns book.chapter01.randomDistribution
-  (:require [quil.core :as q]
-            [quil.middleware :as m]))
+  (:require [quil.core :as q]))
 
 ;; Example I.2: Random number distribution
 
@@ -32,6 +31,6 @@
                 element)))))
 
 (q/defsketch run
-  :size [WIDTH HEIGHT]
+  :size  [WIDTH HEIGHT]
   :setup setup
   :draw  draw)
