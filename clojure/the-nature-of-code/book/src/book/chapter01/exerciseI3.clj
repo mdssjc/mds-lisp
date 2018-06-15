@@ -1,6 +1,5 @@
 (ns book.chapter01.exerciseI3
   (:require [quil.core :as q]
-            [quil.middleware :as m]
             [book.chapter01.walker :as walker]))
 
 ;; Exercise I.3
