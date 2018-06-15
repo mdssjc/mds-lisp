@@ -1,19 +1,10 @@
 (ns book.chapter01.walker
   (:require [quil.core :as q]))
 
-;; Example I.1: Traditional random walk
-
 (def WIDTH  640)
 (def HEIGHT 360)
 
 (defrecord Walker [x y])
-
-(defn rnd-4 [x y]
-  (let [choice (int (q/random 4))]
-    (cond (== choice 0) [(inc x) y]
-          (== choice 1) [(dec x) y]
-          (== choice 2) [x (inc y)]
-          :else         [x (dec y)])))
 
 (defn rnd-8a [x y]
   (let [stepx (+ x (- (int (q/random 3)) 1))
