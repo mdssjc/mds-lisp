@@ -3,6 +3,7 @@
 
 (def WIDTH  640)
 (def HEIGHT 360)
+(def SIZE [WIDTH HEIGHT])
 
 (defrecord Walker [x y])
 
@@ -32,11 +33,15 @@
   (swap! w assoc :x (/ WIDTH 2.0) :y (/ HEIGHT 2.0))
   (q/background 255))
 
-(defn draw []
-  (step    w rnd-8b)
-  (display w))
+(defn draw
+  ([]
+   (step    w rnd-8b)
+   (display w))
+  ([func]
+   (step    w func)
+   (display w)))
 
 (q/defsketch run
-  :size  [WIDTH HEIGHT]
+  :size  SIZE
   :setup setup
   :draw  draw)

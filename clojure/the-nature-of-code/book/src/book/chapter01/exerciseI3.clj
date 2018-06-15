@@ -4,9 +4,6 @@
 
 ;; Exercise I.3
 
-(def WIDTH  640)
-(def HEIGHT 360)
-
 (defn updateByMouse [x y]
   [(cond (> (q/mouse-x) x) (inc x)
          :else (dec x))
@@ -21,11 +18,7 @@
           (< r 0.500) [x (dec y)]
           :else (updateByMouse x y))))
 
-(defn draw []
-  (walker/step    walker/w rnd-dp)
-  (walker/display walker/w))
-
 (q/defsketch run
-  :size [WIDTH HEIGHT]
+  :size  walker/SIZE
   :setup walker/setup
-  :draw  draw)
+  :draw  #(walker/draw rnd-dp))

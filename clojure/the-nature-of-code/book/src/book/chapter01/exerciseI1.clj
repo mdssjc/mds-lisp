@@ -4,19 +4,12 @@
 
 ;; Exercise I.1
 
-(def WIDTH  640)
-(def HEIGHT 360)
-
 (defn rnd-dr [x y]
   (let [stepx (+ x (q/random -1 2))
         stepy (+ y (q/random -1 2))]
     [stepx stepy]))
 
-(defn draw []
-  (walker/step    walker/w rnd-dr)
-  (walker/display walker/w))
-
 (q/defsketch run
-  :size [WIDTH HEIGHT]
+  :size  walker/SIZE
   :setup walker/setup
-  :draw  draw)
+  :draw  #(walker/draw rnd-dr))
