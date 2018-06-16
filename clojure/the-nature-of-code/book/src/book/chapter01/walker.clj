@@ -39,7 +39,11 @@
    (display w))
   ([func]
    (step    w func)
-   (display w)))
+   (display w))
+  ([func-step func-draw]
+   (step w func-step)
+   (func-draw (-> @w :x)
+              (-> @w :y))))
 
 (q/defsketch run
   :size  SIZE
