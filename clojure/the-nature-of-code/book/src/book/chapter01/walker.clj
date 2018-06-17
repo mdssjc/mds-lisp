@@ -24,8 +24,10 @@
 
 (defn step [w func]
   (let [[x y] (func (-> @w :x)
-                    (-> @w :y))]
-    (swap! w assoc :x x :y y)))
+                    (-> @w :y))
+        cx    (q/constrain x 0 (- WIDTH 1))
+        cy    (q/constrain y 0 (- HEIGHT 1))]
+    (swap! w assoc :x cx :y cy)))
 
 (def w (atom (Walker. 0 0)))
 
