@@ -1,4 +1,4 @@
-(ns book.chapter01.exampleI4
+(ns book.introduction.exampleI4
   (:require [quil.core :as q]))
 
 ;; Example I.4: Gaussian distribution

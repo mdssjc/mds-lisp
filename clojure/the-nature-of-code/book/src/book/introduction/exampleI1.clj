@@ -1,6 +1,6 @@
-(ns book.chapter01.exampleI1
+(ns book.introduction.exampleI1
   (:require [quil.core :as q]
-            [book.chapter01.walker :as walker]))
+            [book.introduction.walker :as walker]))
 
 ;; Example I.1: Traditional random walk
 

@@ -1,6 +1,6 @@
-(ns book.chapter01.exampleI3
+(ns book.introduction.exampleI3
   (:require [quil.core :as q]
-            [book.chapter01.walker :as walker]))
+            [book.introduction.walker :as walker]))
 
 ;; Example I.3: Walker that tends to move to the right
 

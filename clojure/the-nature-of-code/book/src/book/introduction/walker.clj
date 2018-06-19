@@ -1,4 +1,4 @@
-(ns book.chapter01.walker
+(ns book.introduction.walker
   (:require [quil.core :as q]))
 
 (def WIDTH  640)

@@ -1,4 +1,4 @@
-(ns book.chapter01.exampleI2
+(ns book.introduction.exampleI2
   (:require [quil.core :as q]))
 
 ;; Example I.2: Random number distribution

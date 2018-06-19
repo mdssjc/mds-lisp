@@ -1,6 +1,6 @@
-(ns book.chapter01.exerciseI6
+(ns book.introduction.exerciseI6
   (:require [quil.core :as q]
-            [book.chapter01.walker :as walker]))
+            [book.introduction.walker :as walker]))
 
 ;; Exercise I.6
 

@@ -1,6 +1,6 @@
-(ns book.chapter01.exampleI5
+(ns book.introduction.exampleI5
   (:require [quil.core :as q]
-            [book.chapter01.walker :as walker]))
+            [book.introduction.walker :as walker]))
 
 ;; Example I.5: Perlin noise walker
 

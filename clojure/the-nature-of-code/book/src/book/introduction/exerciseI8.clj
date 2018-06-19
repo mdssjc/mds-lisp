@@ -1,18 +1,18 @@
-(ns book.chapter01.exampleI6
+(ns book.introduction.exerciseI8
   (:require [quil.core :as q]))
 
-;; Example I.6: 2D Perlin noise
-;; FIXME: problemas na renderização do sketch
+;; Exercise I.8
 
 (def WIDTH  640)
 (def HEIGHT 360)
-(def increment 0.02)
+(def increment 0.01)
 
 (defn setup []
   (q/no-loop))
 
 (defn draw []
-  (q/background 255)
+  (q/background 0)
+  (q/noise-detail 8 0.65)
   (q/pixels)
   (doseq [x (range WIDTH)
           y (range HEIGHT)]
