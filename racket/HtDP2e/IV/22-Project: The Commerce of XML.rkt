@@ -5,6 +5,7 @@
 ;; IV - Intertwined Data
 ;; 22 - Project: The Commerce of XML
 
+(require 2htdp/image)
 
 
 ;; 22.1 - XML as S-expressions
@@ -134,26 +135,20 @@
 ; retrives the contents of xe
 (check-expect (xexpr-content e0) '())
 (check-expect (xexpr-content e1) '())
-(check-expect (xexpr-content e2) '(action))
-(check-expect (xexpr-content e3) '(action))
-(check-expect (xexpr-content e4) '(action action))
+(check-expect (xexpr-content e2) '((action)))
+(check-expect (xexpr-content e3) '((action)))
+(check-expect (xexpr-content e4) '((action) (action)))
 (check-expect (xexpr-content xml1) '())
-(check-expect (xexpr-content xml2) '(li word word li word))
+(check-expect (xexpr-content xml2) '((li (word) (word)) (li (word))))
 
 (define (xexpr-content xe)
-  (local ((define optional-loa+content (rest xe))
-          (define (flatten xe)
-            (cond [(empty? xe) '()]
-                  [(not (list? xe)) (list xe)]
-                  [else
-                   (append (flatten (first xe))
-                           (flatten (rest xe)))])))
+  (local ((define optional-loa+content (rest xe)))
     (cond [(empty? optional-loa+content) '()]
           [else
            (local ((define loa-or-x (first optional-loa+content)))
-             (flatten (if (list-of-attributes? loa-or-x)
-                          (rest optional-loa+content)
-                          optional-loa+content)))])))
+             (if (list-of-attributes? loa-or-x)
+                 (rest optional-loa+content)
+                 optional-loa+content))])))
 
 ;; Exercise 367
 
@@ -272,3 +267,41 @@
 ; - (cons [List-of Attribute] [List-of Xexpr])
 ; An Attribute is a list of two items:
 ;   (cons Symbol (cons String '()))
+
+; An XEnum.v1 is one of:
+; - (cons 'ul [List-of XItem.v1])
+; - (cons 'ul (cons Attributes [List-of XItem.v1]))
+; An XItem.v1 is one of:
+; - (cons 'li (cons XWord '()))
+; - (cons 'li (cons Attributes (cons XWord '())))
+
+(define xe0 '(ul (li (word ((text "one"))))
+                 (li (word ((text "two"))))))
+
+(define BT (circle 2 "solid" "black"))
+(define xe0-rendered (above/align
+                     'left
+                     (beside/align 'center BT (text "one" 12 'black))
+                     (beside/align 'center BT (text "two" 12 'black))))
+
+
+;; =================
+;; Functions:
+
+;; Exercise 372
+
+; XItem.v1 -> Image
+; renders an item as a "word" prefixed by a bullet
+(check-expect (render-item1 '(li (word ((text "one")))))
+              (beside/align 'center BT (text "one" 12 'black)))
+(check-expect (render-item1 '(li (word ((text "two")))))
+              (beside/align 'center BT (text "two" 12 'black)))
+(check-expect (render-item1 '(li ((attr "2")) (word ((text "one")))))
+              (beside/align 'center BT (text "one" 12 'black)))
+
+(define (render-item1 i)
+  (local ((define content (xexpr-content i))
+          (define element (first content))
+          (define a-word  (word-text element))
+          (define item    (text a-word 12 'black)))
+    (beside/align 'center BT item)))
