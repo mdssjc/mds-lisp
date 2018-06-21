@@ -305,3 +305,67 @@
           (define a-word  (word-text element))
           (define item    (text a-word 12 'black)))
     (beside/align 'center BT item)))
+
+; XEnum.v1 -> Image
+; renders a simple enumeration as an image
+(check-expect (render-enum1 xe0) xe0-rendered)
+
+(define (render-enum1 xe)
+  (local ((define content (xexpr-content xe))
+          ; XItem.v1 Image -> Image
+          (define (deal-with-one item so-far)
+            (above/align 'left
+                         (render-item1 item)
+                         so-far)))
+    (foldr deal-with-one empty-image content)))
+
+
+;; =================
+;; Data definitions:
+
+; An XItem.v2 is one of:
+; - (cons 'li (cons XWord '()))
+; - (cons 'li (cons [List-of Attribute] (list XWord)))
+; - (cons 'li (cons XEnum.v2 '()))
+; - (cons 'li (cons [List-of Attribute] (list XEnum.v2)))
+;
+; An XEnum.v2 is one of:
+; - (cons 'ul [List-of XItem.v2])
+; - (cons 'ul (cons [List-of Attribute] [List-of XItem.v2]))
+
+
+;; =================
+;; Constants:
+
+(define SIZE 12)       ; font size
+(define COLOR "black") ; font color
+(define BT.V2          ; a graphical constant
+  (beside (circle 1 'solid 'black) (text " " SIZE COLOR)))
+
+
+;; =================
+;; Functions:
+
+; Image -> Image
+; marks item with bullet
+(define (bulletize item)
+  (beside/align 'center BT.V2 item))
+
+; XEnum.v2 -> Image
+; renders an XEnum.v2 as an image
+(define (render-enum xe)
+  (local ((define content (xexpr-content xe))
+          ; XItem.v2 Image -> Image
+          (define (deal-with-one item so-far)
+            (above/align 'left (render-item item) so-far)))
+    (foldr deal-with-one empty-image content)))
+
+; XItem.v2 -> Image
+; renders one XItem.v2 as an image
+(define (render-item an-item)
+  (local ((define content (first (xexpr-content an-item))))
+    (bulletize
+     (cond [(word? content)
+            (text (word-text content) SIZE 'black)]
+           [else
+            (render-enum content)]))))
