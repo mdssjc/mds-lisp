@@ -399,3 +399,30 @@
             (text (word-text content) SIZE 'black)]
            [else
             (render-enum content)]))))
+
+;; Exercise 374
+
+
+;; =================
+;; Data definitions:
+
+; An XItem.v3 is one of:
+; - (cons 'li (cons XWord '()))
+; - (cons 'li (cons AL LXW)
+; - (cons 'li (cons XEnum.v3 '()))
+; - (cons 'li (cons AL LXE))
+; An XEnum.v3 is one of:
+; - (cons 'ul LXI)
+; - (cons 'ul (cons AL LXI))
+; An AL is one of:
+; - '()
+; - (cons Attribute AL)
+; An LXW is one of:
+; - '()
+; - (cons XWord LXW)
+; An LXE is one of:
+; - '()
+; - (cons XEnum.v3 LXE)
+; An LXI is one of:
+; - '()
+; - (cons XItem.v3 LXI)
