@@ -333,6 +333,11 @@
 ; - (cons 'ul [List-of XItem.v2])
 ; - (cons 'ul (cons [List-of Attribute] [List-of XItem.v2]))
 
+(define xi0 '(li (word ((text "one")))))
+(define xi1 '(li ((attr "true")) (word ((text "one")))))
+(define xi2 '(li (ul (li (word ((text "one"))))
+                     (li (word ((text "two")))))))
+
 
 ;; =================
 ;; Constants:
@@ -346,13 +351,26 @@
 ;; =================
 ;; Functions:
 
+;; Exercise 373
+
 ; Image -> Image
 ; marks item with bullet
+(check-expect (bulletize empty-image)
+              (beside/align 'center BT.V2 empty-image))
+(check-expect (bulletize (text "my text" 12 "black"))
+              (beside/align 'center BT.V2 (text "my text" 12 "black")))
+
 (define (bulletize item)
   (beside/align 'center BT.V2 item))
 
 ; XEnum.v2 -> Image
 ; renders an XEnum.v2 as an image
+(check-expect (render-enum xe0)
+              (above/align
+               'left
+               (beside/align 'center BT.V2 (text "one" 12 'black))
+               (beside/align 'center BT.V2 (text "two" 12 'black))))
+
 (define (render-enum xe)
   (local ((define content (xexpr-content xe))
           ; XItem.v2 Image -> Image
@@ -362,6 +380,18 @@
 
 ; XItem.v2 -> Image
 ; renders one XItem.v2 as an image
+(check-expect (render-item xi0)
+              (beside/align 'center BT.V2 (text "one" 12 'black)))
+(check-expect (render-item xi1)
+              (beside/align 'center BT.V2 (text "one" 12 'black)))
+(check-expect (render-item xi2)
+              (beside/align
+               'center BT.V2
+               (above/align
+                'left
+                (beside/align 'center BT.V2 (text "one" 12 'black))
+                (beside/align 'center BT.V2 (text "two" 12 'black)))))
+
 (define (render-item an-item)
   (local ((define content (first (xexpr-content an-item))))
     (bulletize
