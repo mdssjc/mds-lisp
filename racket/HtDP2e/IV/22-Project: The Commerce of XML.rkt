@@ -105,11 +105,11 @@
                  '()))])))
 
 ; [List-of Attribute] or Xexpr.v2 -> Boolean
-; is x a list of attributes
-(define (list-of-attributes? x)
-  (cond [(empty? x) #true]
+; is xi a list of attributes
+(define (list-of-attributes? xi)
+  (cond [(empty? xi) #true]
         [else
-         (local ((define possible-attribute (first x)))
+         (local ((define possible-attribute (first xi)))
            (cons? possible-attribute))]))
 
 ;; Exercise 366
@@ -194,8 +194,8 @@
 (check-expect (find-attr a0 'attr) #false)
 (check-expect (find-attr a0 'initial) "X")
 
-(define (find-attr x s)
-  (local ((define result (assq s x)))
+(define (find-attr xi s)
+  (local ((define result (assq s xi)))
     (if (false? result)
         result
         (second result))))
@@ -236,14 +236,14 @@
 (check-expect (word? '(word ((text key value)))) #false)
 (check-expect (word? '(words ((text "10"))))     #false)
 
-(define (word? x)
-  (and (cons? x)
-       (= (length x) 2)
-       (symbol=? (first x) 'word)
-       (cons? (second x))
-       (= (length (first (second x))) 2)
-       (symbol=? (first (first (second x))) 'text)
-       (string? (second (first (second x))))))
+(define (word? xi)
+  (and (cons? xi)
+       (= (length xi) 2)
+       (symbol=? (first xi) 'word)
+       (cons? (second xi))
+       (= (length (first (second xi))) 2)
+       (symbol=? (first (first (second xi))) 'text)
+       (string? (second (first (second xi))))))
 
 ; XWord -> String
 ; extracts the value of the only attribute of an instance of XWord
@@ -460,10 +460,6 @@
 
 ;; Exercise 376
 
-
-;; =================
-;; Functions:
-
 ; XEnum.v2 -> Number
 ; counts all "hello"s in an instance of XEnum.v2
 (check-expect (count-hello xe0) 0)
@@ -471,15 +467,41 @@
 (check-expect (count-hello xe2) 2)
 
 (define (count-hello xe)
-  (local ((define content (xexpr-content xe))
-          ;; XItem.v2 Number -> Number
-          (define (count-hello xi acc)
+  (local ((define (count-hello xi acc)
             (+ (count-hello-item xi) acc))
-          ;; XItem.v2 -> Number
           (define (count-hello-item xi)
             (local ((define element (first (xexpr-content xi))))
               (cond [(word? element)
                      (if (string=? (word-text element) "hello") 1 0)]
                     [else
                      (count-hello element)]))))
-    (foldr count-hello 0 content)))
+    (foldr count-hello 0 (xexpr-content xe))))
+
+;; Exercise 377
+
+; XEnum.v2 -> XEnum.v2
+; replaces all "hello"s with "bye" in an enumeration
+(check-expect (replace-hello-bye xe0) xe0)
+(check-expect (replace-hello-bye xe1)
+              '(ul (li (word ((text "bye"))))))
+(check-expect (replace-hello-bye xe2)
+              '(ul (li (word ((text "bye"))))
+                   (li (word ((text "bye"))))))
+
+(define (replace-hello-bye xe)
+  (local ((define (make-element x content)
+            (local ((define attr (xexpr-attr x)))
+              (cons (xexpr-name x)
+                    (cond [(empty? attr) content]
+                          [else
+                           (cons attr content)]))))
+          (define (replace-hello-item xi)
+            (local ((define (replace-element element)
+                      (cond [(word? element)
+                             (if (string=? (word-text element) "hello")
+                                 '(word ((text "bye")))
+                                 element)]
+                            [else
+                             (replace-hello-bye element)])))
+              (make-element xi (list (replace-element (first (xexpr-content xi))))))))
+    (make-element xe (map replace-hello-item (xexpr-content xe)))))
