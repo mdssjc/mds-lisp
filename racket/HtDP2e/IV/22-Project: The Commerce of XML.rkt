@@ -426,3 +426,30 @@
 ; An LXI is one of:
 ; - '()
 ; - (cons XItem.v3 LXI)
+
+;; Exercise 375
+
+
+;; =================
+;; Functions:
+
+; XItem.v2 -> Image
+; renders one XItem.v2 as an image
+(check-expect (render-item.v2 xi0)
+              (beside/align 'center BT.V2 (text "one" 12 'black)))
+(check-expect (render-item.v2 xi1)
+              (beside/align 'center BT.V2 (text "one" 12 'black)))
+(check-expect (render-item.v2 xi2)
+              (beside/align
+               'center BT.V2
+               (above/align
+                'left
+                (beside/align 'center BT.V2 (text "one" 12 'black))
+                (beside/align 'center BT.V2 (text "two" 12 'black)))))
+
+(define (render-item.v2 an-item)
+  (local ((define content (first (xexpr-content an-item))))
+    (cond [(word? content)
+           (bulletize (text (word-text content) SIZE 'black))]
+          [else
+           (bulletize (render-enum content))])))
