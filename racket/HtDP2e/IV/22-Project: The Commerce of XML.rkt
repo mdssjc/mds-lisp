@@ -338,6 +338,10 @@
 (define xi2 '(li (ul (li (word ((text "one"))))
                      (li (word ((text "two")))))))
 
+(define xe1 '(ul (li (word ((text "hello"))))))
+(define xe2 '(ul (li (word ((text "hello"))))
+                 (li (word ((text "hello"))))))
+
 
 ;; =================
 ;; Constants:
@@ -453,3 +457,29 @@
            (bulletize (text (word-text content) SIZE 'black))]
           [else
            (bulletize (render-enum content))])))
+
+;; Exercise 376
+
+
+;; =================
+;; Functions:
+
+; XEnum.v2 -> Number
+; counts all "hello"s in an instance of XEnum.v2
+(check-expect (count-hello xe0) 0)
+(check-expect (count-hello xe1) 1)
+(check-expect (count-hello xe2) 2)
+
+(define (count-hello xe)
+  (local ((define content (xexpr-content xe))
+          ;; XItem.v2 Number -> Number
+          (define (count-hello xi acc)
+            (+ (count-hello-item xi) acc))
+          ;; XItem.v2 -> Number
+          (define (count-hello-item xi)
+            (local ((define element (first (xexpr-content xi))))
+              (cond [(word? element)
+                     (if (string=? (word-text element) "hello") 1 0)]
+                    [else
+                     (count-hello element)]))))
+    (foldr count-hello 0 content)))
