@@ -541,10 +541,17 @@
             [on-key (lambda (current key-event)
                       (find transitions current))]))
 
+;; Exercise 379
+
 ; [X Y] [List-of [List X Y]] X -> Y
 ; finds the matching Y for the given X in alist
+(check-expect (find fsm-traffic "red")    "green")
+(check-expect (find fsm-traffic "green")  "yellow")
+(check-expect (find fsm-traffic "yellow") "red")
+(check-error  (find fsm-traffic "white")  "not found")
+
 (define (find alist x)
   (local ((define fm (assoc x alist)))
-    (if (cons? fm)
+    (if (cons?  fm)
         (second fm)
         (error "not found"))))
