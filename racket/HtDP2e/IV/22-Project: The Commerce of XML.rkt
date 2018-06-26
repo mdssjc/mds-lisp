@@ -6,6 +6,7 @@
 ;; 22 - Project: The Commerce of XML
 
 (require 2htdp/image)
+(require 2htdp/universe)
 
 
 ;; 22.1 - XML as S-expressions
@@ -505,3 +506,45 @@
                              (replace-hello-bye element)])))
               (make-element xi (list (replace-element (first (xexpr-content xi))))))))
     (make-element xe (map replace-hello-item (xexpr-content xe)))))
+
+
+
+;; 22.3 Domain-Specific Languages
+
+
+;; =================
+;; Data definitions:
+
+; An FSM is a [List-of 1Transition]
+; A 1Transition is a list of two items:
+;   (cons FSM-State (cons FSM-State '()))
+; An FSM-State is a String that specifies a color
+
+; data examples
+(define fsm-traffic
+  '(("red" "green") ("green" "yellow") ("yellow" "red")))
+
+
+;; =================
+;; Functions:
+
+;; Exercise 378
+
+; FSM FSM-State -> FSM-State
+; matches the keys pressed by a player with the given FSM
+(define (simulate state0 transitions)
+  (big-bang state0 ; FSM-State
+            [to-draw (lambda (current)
+                       (overlay
+                        (text current 30 "white")
+                        (square 100 "solid" current)))]
+            [on-key (lambda (current key-event)
+                      (find transitions current))]))
+
+; [X Y] [List-of [List X Y]] X -> Y
+; finds the matching Y for the given X in alist
+(define (find alist x)
+  (local ((define fm (assoc x alist)))
+    (if (cons? fm)
+        (second fm)
+        (error "not found"))))
