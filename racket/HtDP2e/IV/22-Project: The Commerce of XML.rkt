@@ -588,3 +588,35 @@
                         (square 100 "solid" current)))]
             [on-key (lambda (current key-event)
                       (find transitions (list current key-event)))]))
+
+
+;; =================
+;; Data definitions:
+
+; An XMachine is a nested list of this shape:
+;   `(machine ((initial ,FSM-State)) [List-of X1T])
+; An X1T is a nested list of this shape:
+;   `(action ((state ,FSM-State) (next ,FSM-State)))
+(define xm0
+  '(machine ((initial "red"))
+     (action ((state "red")    (next "green")))
+     (action ((state "green")  (next "yellow")))
+     (action ((state "yellow") (next "red")))))
+
+;; Exercise 381
+
+; An XMachine is a nested list of this shape:
+;    (cons 'machine (cons (list (list 'initial FSM-State)) [List-of X1T]))
+; An X1T is a nested list of this shape:
+;    (cons 'action (cons (list (list 'state FSM-State) (list 'next FSM-State)) '()))
+(define xm0.v2 (cons 'machine
+                     (cons (list (list 'initial "red"))
+                           (list (cons 'action
+                                       (cons (list (list 'state "red")
+                                                   (list 'next  "green")) '()))
+                                 (cons 'action
+                                       (cons (list (list 'state "green")
+                                                   (list 'next  "yellow")) '()))
+                                 (cons 'action
+                                       (cons (list (list 'state "yellow")
+                                                   (list 'next  "red")) '()))))))
