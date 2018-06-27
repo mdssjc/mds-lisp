@@ -521,8 +521,9 @@
 ; An FSM-State is a String that specifies a color
 
 ; data examples
-(define fsm-traffic
-  '(("red" "green") ("green" "yellow") ("yellow" "red")))
+(define fsm-traffic '(("red"    "green")
+                      ("green"  "yellow")
+                      ("yellow" "red")))
 
 
 ;; =================
@@ -555,3 +556,35 @@
     (if (cons?  fm)
         (second fm)
         (error "not found"))))
+
+;; Exercise 380
+
+
+;; =================
+;; Data definitions:
+
+; A 1Transition is a list of two items:
+;   (cons (list FSM-State KeyEvent) (cons FSM-State '()))
+
+; data examples
+(define fsm-traffic-2 '((("red"    "g") "green")
+                        (("green"  "y") "yellow")
+                        (("yellow" "r") "red")))
+
+;; a 1Transition is a list of two items:
+;; (cons (list FSM-State KeyEvent) (cons FSM-State '()))
+
+
+;; =================
+;; Functions:
+
+; FSM FSM-State -> FSM-State
+; matches the keys pressed by a player with the given FSM
+(define (simulate.v2 state0 transitions)
+  (big-bang state0 ; FSM-State
+            [to-draw (lambda (current)
+                       (overlay
+                        (text current 30 "white")
+                        (square 100 "solid" current)))]
+            [on-key (lambda (current key-event)
+                      (find transitions (list current key-event)))]))
