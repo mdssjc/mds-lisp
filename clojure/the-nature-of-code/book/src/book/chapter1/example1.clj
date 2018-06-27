@@ -6,14 +6,20 @@
 
 (defn setup []
   (q/background 255)
-  {:x 100.0 :y 100.0 :x-speed 1.0 :y-speed 3.3})
+  (q/smooth)
+
+  {:x       100.0
+   :y       100.0
+   :x-speed 2.5
+   :y-speed 2.0})
 
 (defn draw [state]
   (q/background 255)
 
   (q/stroke 0)
-  (q/fill 175)
-  (q/ellipse (:x state) (:y state) 16 16))
+  (q/stroke-weight 2)
+  (q/fill 127)
+  (q/ellipse (:x state) (:y state) 48 48))
 
 (defn check-bouncing [pos speed f]
   (if (or (> pos (f))
@@ -30,7 +36,7 @@
      :y-speed (check-bouncing y-pos (:y-speed state) q/height)}))
 
 (q/defsketch run
-  :size   [640 360]
+  :size   [800 200]
   :setup  setup
   :draw   draw
   :update update-state
