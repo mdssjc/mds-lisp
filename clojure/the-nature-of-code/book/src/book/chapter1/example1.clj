@@ -21,11 +21,11 @@
   (q/fill 127)
   (q/ellipse (:x state) (:y state) 48 48))
 
-(defn check-bouncing [pos speed f]
-  (if (or (> pos (f))
-          (< pos 0))
-    (* speed -1)
-    speed))
+(defn check-bouncing [location velocity dimension]
+  (if (or (> location (dimension))
+          (< location 0))
+    (* velocity -1)
+    velocity))
 
 (defn update-state [state]
   (let [x-pos (+ (:x state) (:x-speed state))
