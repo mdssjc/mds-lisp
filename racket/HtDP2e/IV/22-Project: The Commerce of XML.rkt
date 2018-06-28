@@ -632,3 +632,35 @@
   '(machine ((initial "black"))
             (action ((state "black") (next "white")))
             (action ((state "white") (next "black")))))
+
+;; Exercise 383
+
+
+;; =================
+;; Functions:
+
+; XMachine -> FSM-State
+; interprets the given configuration as a state machine
+(define (simulate-xmachine xm)
+  (simulate (xm-state0 xm) (xm->transitions xm)))
+
+; XMachine -> FSM-State
+; extracts and translates the transition table from xm0
+(check-expect (xm-state0 xm0) "red")
+(check-expect (xm-state0 fsm-bw-machine) "black")
+
+(define (xm-state0 xm0)
+  (find-attr (xexpr-attr xm0) 'initial))
+
+; XMachine -> [List-of 1Transition]
+; extracts the transition table from xm
+(check-expect (xm->transitions xm0) fsm-traffic)
+(check-expect (xm->transitions fsm-bw-machine)
+              '(("black" "white") ("white" "black")))
+
+(define (xm->transitions xm)
+  (local (; X1T -> 1Transition
+          (define (xaction->action xa)
+            (list (find-attr (xexpr-attr xa) 'state)
+                  (find-attr (xexpr-attr xa) 'next))))
+    (map xaction->action (xexpr-content xm))))
