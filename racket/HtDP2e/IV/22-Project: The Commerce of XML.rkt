@@ -620,3 +620,15 @@
                                  (cons 'action
                                        (cons (list (list 'state "yellow")
                                                    (list 'next  "red")) '()))))))
+
+;; Exercise 382
+
+;; <machine initial="black">
+;;   <action state="black" next="white" />
+;;   <action state="white" next="black" />
+;; <machine/>
+
+(define fsm-bw-machine
+  '(machine ((initial "black"))
+            (action ((state "black") (next "white")))
+            (action ((state "white") (next "black")))))
