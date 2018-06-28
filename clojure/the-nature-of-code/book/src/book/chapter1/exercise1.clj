@@ -1,7 +1,7 @@
 (ns book.chapter1.exercise1
+  (:use [book.chapter1.utils])
   (:require [quil.core :as q]
             [quil.middleware :as m]
-            [book.chapter1.utils]
             [book.chapter1.PVector :as v]))
 
 ;; Exercise 1.1

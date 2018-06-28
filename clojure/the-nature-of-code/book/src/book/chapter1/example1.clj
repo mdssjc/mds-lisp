@@ -1,4 +1,5 @@
 (ns book.chapter1.example1
+  (:use [book.chapter1.utils])
   (:require [quil.core :as q]
             [quil.middleware :as m]))
 
@@ -20,12 +21,6 @@
   (q/stroke-weight 2)
   (q/fill 127)
   (q/ellipse (:x state) (:y state) 48 48))
-
-(defn check-bouncing [location velocity dimension]
-  (if (or (> location (dimension))
-          (< location 0))
-    (* velocity -1)
-    velocity))
 
 (defn update-state [state]
   (let [x-pos (+ (:x state) (:x-speed state))

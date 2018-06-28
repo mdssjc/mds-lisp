@@ -1,4 +1,5 @@
 (ns book.chapter1.example2
+  (:use [book.chapter1.utils])
   (:require [quil.core :as q]
             [quil.middleware :as m]
             [book.chapter1.PVector :as v]))
@@ -17,12 +18,6 @@
   (q/ellipse (get-in state [:location :x])
              (get-in state [:location :y])
              16 16))
-
-(defn check-bouncing [location velocity dimension]
-  (if (or (> location (dimension))
-          (< location 0))
-    (* velocity -1)
-    velocity))
 
 (defn update-state [state]
   (let [location (v/add (:location state) (:velocity state))]
