@@ -5,8 +5,9 @@
 ;; IV - Intertwined Data
 ;; 22 - Project: The Commerce of XML
 
-(require 2htdp/image)
 (require 2htdp/universe)
+(require 2htdp/image)
+(require 2htdp/batch-io)
 
 
 ;; 22.1 - XML as S-expressions
@@ -664,3 +665,77 @@
             (list (find-attr (xexpr-attr xa) 'state)
                   (find-attr (xexpr-attr xa) 'next))))
     (map xaction->action (xexpr-content xm))))
+
+
+
+;; 22.4 Reading XML
+
+
+;; =================
+;; Data definitions:
+
+; An Xexpr.v3 is one of:
+;  - Symbol
+;  - String
+;  - Number
+;  - (cons Symbol (cons Attribute*.v3 [List-of Xexpr.v3]))
+;  - (cons Symbol [List-of Xexpr.v3])
+;
+; An Attribute*.v3 is a [List-of Attribute.v3].
+;
+; An Attribute.v3 is a list of two items:
+;   (list Symbol String)
+
+;; (read-plain-xexpr/web
+;;  (string-append
+;;   "http://www.ccs.neu.edu/"
+;;   "home/matthias/"
+;;   "HtDP2e/Files/machine-configuration.xml"))
+
+
+;; =================
+;; Constants:
+
+(define PREFIX  "https://www.google.com/finance?q=")
+(define SIZE.V2 22) ; font size
+
+
+;; =================
+;; Data definitions:
+
+(define-struct data [price delta])
+; A StockWorld is a structure: (make-data String String)
+
+
+;; =================
+;; Functions:
+
+;; Exercise 384
+
+; String -> StockWorld
+; retrieves the stock price of co and its change every 15s
+(define (stock-alert co)
+  (local (; the url of search page
+          (define url (string-append PREFIX co))
+
+          ; [StockWorld -> StockWorld]
+          ; retrives new data
+          (define (retrieve-stock-data __w)
+            (local ((define x (read-xexpr/web url)))
+              (make-data (get x "price")
+                         (get x "priceChange"))))
+
+          ; StockWorld -> Image
+          ; renders stock data
+          (define (render-stock-data w)
+            (local (; [StockWorld -> String] -> Image
+                    (define (word sel col)
+                      (text (sel w) SIZE.V2 col)))
+              (overlay (beside (word data-price 'black)
+                               (text "  " SIZE.V2 'white)
+                               (word data-delta 'red))
+                       (rectangle 300 35 'solid 'white)))))
+
+    (big-bang (retrieve-stock-data 'no-use)
+              [on-tick retrieve-stock-data 15]
+              [to-draw render-stock-data])))
