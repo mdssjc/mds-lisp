@@ -739,3 +739,7 @@
     (big-bang (retrieve-stock-data 'no-use)
               [on-tick retrieve-stock-data 15]
               [to-draw render-stock-data])))
+
+;; Exercise 385
+
+;; (read-xexpr "ford.xml")
