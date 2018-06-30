@@ -743,3 +743,53 @@
 ;; Exercise 385
 
 ;; (read-xexpr "ford.xml")
+
+;; Exercise 386
+
+
+;; =================
+;; Functions:
+
+; Xexpr.v3 String -> String
+; retrieves the value of the "content" attribute from a 'meta element that has
+; attribute "itemprop" with value s
+(check-expect (get '(meta ((content "+1") (itemprop "F"))) "F") "+1")
+(check-error  (get '(meta ((content "+1") (itemprop "F"))) "M") "not found")
+
+(define (get x s)
+  (local ((define result (get-xexpr x s)))
+    (if (string? result)
+        result
+        (error "not found"))))
+
+; Xexpr.v3 String -> [Maybe String]
+; retrieves the value of the "content" attribute from a 'meta element that has
+; attribute "itemprop" with value s
+(check-expect (get-xexpr '(meta ((content "+1") (itemprop "F"))) "F") "+1")
+(check-expect (get-xexpr '(meta ((content "+1") (itemprop "F"))) "M") #false)
+
+(define (get-xexpr x s)
+  (local (; AL -> [Maybe String]
+          (define (itemprop-content an-al)
+            (local ((define itemprop-s? (equal? (assoc 'itemprop an-al) `(itemprop ,s)))
+                    (define content     (assoc 'content an-al))
+                    (define content?    (not (false? content))))
+              (if (and itemprop-s? content?)
+                  (second content)
+                  #false)))
+
+          ; [List-of XExpr.v3] -> [Maybe String]
+          (define (get-xexpr-from-xlist list-of-xexpr)
+            (cond [(empty? list-of-xexpr) #false]
+                  [else
+                   (local ((define xexpr (get-xexpr (first list-of-xexpr) s)))
+                     (if (false? xexpr)
+                         (get-xexpr-from-xlist (rest list-of-xexpr))
+                         xexpr))]))
+
+          (define itemprop-c (itemprop-content (xexpr-attr x))))
+
+    (if (and (equal? (xexpr-name x) 'meta)
+             (not (false? itemprop-c)))
+        itemprop-c
+        (get-xexpr-from-xlist (xexpr-content x)))))
