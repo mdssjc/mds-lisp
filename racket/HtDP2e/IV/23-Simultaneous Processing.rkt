@@ -48,3 +48,95 @@
           [else
            (append (cross-one (first los) lon)
                    (cross     (rest  los) lon))])))
+
+
+
+;; 23.2 Processing Two Lists Simultaneously: Case 2
+
+
+;; =================
+;; Functions:
+
+; [List-of Number] [List-of Number] -> [List-of Number]
+; multiplies the corresponding items on
+; hours and wages/h
+; assume the two lists are of equal length
+(check-expect (wages*.v2 '() '()) '())
+(check-expect (wages*.v2 '(5.65) '(40))
+              '(226.0))
+(check-expect (wages*.v2 '(5.65 8.75) '(40.0 30.0))
+              '(226.0 262.5))
+
+(define (wages*.v2 hours wages/h)
+  (cond [(empty? hours) '()]
+        [else
+         (cons (weekly-wage (first hours) (first wages/h))
+               (wages*.v2   (rest  hours) (rest  wages/h)))]))
+
+; Number Number -> Number
+; computes the weekly wage from pay-rate and hours
+(define (weekly-wage pay-rate hours)
+  (* pay-rate hours))
+
+;; Exercise 388
+
+
+;; =================
+;; Data definitions:
+
+(define-struct employee [name ssn pay-rate])
+; An Employee is a structure:
+;   (make-employee String Number Number)
+; interpretation (make-employee s n1 n2) specifies an employee
+;   s: employee’s name;
+;  n1: social security number; and
+;  n2: pay rate
+(define E0 (make-employee "John"  123 51.52))
+(define E1 (make-employee "Marie" 456 62.39))
+
+(define-struct work-record [name hours])
+; A Work-Record is a structure:
+;   (make-work-record String Number)
+; interpretation (make-work-record s n) specifies an work record to an employee
+;  s: employee’s name; and
+;  n: number of hours worked in a week
+(define WR0 (make-work-record "John"  12))
+(define WR1 (make-work-record "Marie" 10))
+
+(define-struct result [name weekly-wage])
+; A Result is a structure:
+;   (make-result String Number)
+; interpretation (make-result s n) specifies the result of weekly wage for the employee
+;  s: employee; and
+;  n: weekly wage
+
+
+(define one-list-employee    (list E0 E1))
+(define one-list-work-record (list WR0 WR1))
+
+
+;; =================
+;; Functions:
+
+; [List-of Employee] [List-of Work-Record] -> [List-of Result]
+; computes the result of weekly wage for the employees
+(check-expect (wages*.v3 one-list-employee one-list-work-record)
+              (list (make-result (employee-name E0)
+                                 (* (employee-pay-rate E0)
+                                    (work-record-hours WR0)))
+                    (make-result (employee-name E1)
+                                 (* (employee-pay-rate E1)
+                                    (work-record-hours WR1)))))
+
+(define (wages*.v3 loe low)
+  (cond [(empty? loe) '()]
+        [else
+         (cons (make-result (employee-name  (first loe))
+                            (weekly-wage.v2 (first loe) (first low)))
+               (wages*.v3 (rest loe) (rest low)))]))
+
+; Employee [List-of Work-Record] -> Number
+; computes the weekly wage of an employee
+(define (weekly-wage.v2 e wr)
+  (* (employee-pay-rate e)
+     (work-record-hours wr)))
