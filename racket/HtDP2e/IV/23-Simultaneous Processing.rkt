@@ -140,3 +140,40 @@
 (define (weekly-wage.v2 e wr)
   (* (employee-pay-rate e)
      (work-record-hours wr)))
+
+;; Exercise 389
+
+
+;; =================
+;; Data definitions:
+
+(define-struct phone-record [name number])
+; A PhoneRecord is a structure:
+;   (make-phone-record String String)
+
+
+;; =================
+;; Functions:
+
+; [List-of String] [List-of String] -> [List-of PhoneRecord]
+; combines those equally long lists into a list of phone records
+(check-expect (zip '() '("123-123-123" "234-234-234")) '())
+(check-expect (zip '("John" "Marie") '()) '())
+(check-expect (zip '("John" "Marie") '("123-123-123" "234-234-234"))
+              (list (make-phone-record "John"  "123-123-123")
+                    (make-phone-record "Marie" "234-234-234")))
+(check-expect (zip '("John" "Marie" "Paul") '("123-123-123" "234-234-234"))
+              (list (make-phone-record "John"  "123-123-123")
+                    (make-phone-record "Marie" "234-234-234")))
+(check-expect (zip '("John" "Marie") '("123-123-123" "234-234-234" "345-345-345"))
+              (list (make-phone-record "John"  "123-123-123")
+                    (make-phone-record "Marie" "234-234-234")))
+
+(define (zip los1 los2)
+  (cond [(or (empty? los1)
+             (empty? los2)) '()]
+        [else
+         (cons (make-phone-record (first los1)
+                                  (first los2))
+               (zip (rest los1)
+                    (rest los2)))]))
