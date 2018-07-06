@@ -1,4 +1,4 @@
-(ns book.chapter1.PVector
+(ns book.chapter1.pvector
   (:use clojure.test))
 
 (defn make-pvector [x y]

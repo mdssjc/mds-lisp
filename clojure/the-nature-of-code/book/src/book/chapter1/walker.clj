@@ -1,6 +1,6 @@
 (ns book.chapter1.walker
   (:require [quil.core :as q]
-            [book.chapter1.PVector :as v]))
+            [book.chapter1.pvector :as v]))
 
 (defn make-walker []
   (v/make-pvector (/ (q/width)  2.0)

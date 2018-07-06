@@ -2,7 +2,7 @@
   (:use [book.chapter1.utils])
   (:require [quil.core :as q]
             [quil.middleware :as m]
-            [book.chapter1.PVector :as v]))
+            [book.chapter1.pvector :as v]))
 
 ;; Example 1.2: Bouncing ball with PVectors!
 
