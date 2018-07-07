@@ -177,3 +177,86 @@
                                   (first los2))
                (zip (rest los1)
                     (rest los2)))]))
+
+
+
+;; 23.3 Processing Two Lists Simultaneously: Case 3
+
+
+;; =================
+;; Data definitions:
+
+; N is one of:
+; - 0
+; - (add1 N)
+
+
+;; =================
+;; Functions:
+
+; [List-of Symbol] N -> Symbol
+; extracts the nth symbol from l;
+; signals an error if there is no such symbol
+(check-expect (list-pick '(a b c) 2) 'c)
+(check-error  (list-pick '() 0) "list-pick: list too short")
+(check-expect (list-pick (cons 'a '()) 0) 'a)
+(check-error  (list-pick '() 3) "list-pick: list too short")
+(check-expect (list-pick '(a b) 1) 'b)
+
+(define (list-pick l n)
+  (cond [(and (= n 0) (empty? l))
+         (error 'list-pick "list too short")]
+        [(and (> n 0) (empty? l))
+         (error 'list-pick "list too short")]
+        [(and (= n 0) (cons? l)) (first l)]
+        [(and (> n 0) (cons? l)) (list-pick (rest l) (sub1 n))]))
+
+;; Exercise 390
+
+
+;; =================
+;; Data definitions:
+
+(define-struct branch [left right])
+; A Branch is a structure:
+;   (make-branch Symbol Symbol)
+
+; A TOS is one of:
+; - Symbol
+; - (make-branch TOS TOS)
+(define TOS0 (make-branch (make-branch (make-branch 'a 'e)
+                                       (make-branch 'b 'c))
+                          (make-branch 'd 'e)))
+
+; A Direction is one of:
+; - 'left
+; - 'right
+
+; A list of Directions is also called a path.
+(define PATH0 '(left right left))
+
+
+;; =================
+;; Functions:
+
+; TOS Path -> Symbol
+; extracts the symbol of the TOS for the given path
+; signals an error when given a symbol and a non-empty path
+(check-expect (tree-pick 'a   '()) 'a)
+(check-error  (tree-pick TOS0 '()) "end of path")
+(check-error  (tree-pick TOS0 '(left left left left left)) "end of tos")
+(check-expect (tree-pick TOS0 PATH0) 'b)
+
+(define (tree-pick tos path)
+  (cond [(and (empty?  path)
+              (symbol? tos)) tos]
+        [(and (empty?  path)
+              (branch? tos)) (error "end of path")]
+        [(and (cons?   path)
+              (symbol? tos)) (error "end of tos")]
+        [(and (cons?   path)
+              (branch? tos))
+         (tree-pick (if (equal? 'left (first path))
+                        (branch-left  tos)
+                        (branch-right tos))
+                    (rest path))]))
