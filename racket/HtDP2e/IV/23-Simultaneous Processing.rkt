@@ -325,3 +325,24 @@
         [else
          (cons (first front)
                (replace-eol-with.v2 (rest front) end))]))
+
+;; Exercise 392
+
+; tree-pick: TOS Path -> Symbol
+; extracts the symbol of the TOS for the given path
+; signals an error when given a symbol and a non-empty path
+(check-expect (tree-pick.v2 'a   '()) 'a)
+(check-error  (tree-pick.v2 TOS0 '()) "end of path")
+(check-error  (tree-pick.v2 TOS0 '(left left left left left)) "end of tos")
+(check-expect (tree-pick.v2 TOS0 PATH0) 'b)
+
+(define (tree-pick.v2 tos path)
+  (cond [(empty? path) (if (symbol? tos)
+                           tos
+                           (error "end of path"))]
+        [(symbol? tos) (error "end of tos")]
+        [else
+         (tree-pick.v2 (if (equal? 'left (first path))
+                           (branch-left  tos)
+                           (branch-right tos))
+                       (rest path))]))
