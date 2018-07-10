@@ -260,3 +260,68 @@
                         (branch-left  tos)
                         (branch-right tos))
                     (rest path))]))
+
+
+
+;; 23.4 Function Simplification
+
+
+;; =================
+;; Functions:
+
+; list-pick: [List-of Symbol] N[>= 0] -> Symbol
+; determines the nth symbol from alos, counting from 0;
+; signals an error if there is no nth symbol
+(check-expect (list-pick.v2 '(a b c) 2) 'c)
+(check-error  (list-pick.v2 '() 0) "list-pick: list too short")
+(check-expect (list-pick.v2 (cons 'a '()) 0) 'a)
+(check-error  (list-pick.v2 '() 3) "list-pick: list too short")
+(check-expect (list-pick.v2 '(a b) 1) 'b)
+
+(define (list-pick.v2 alos n)
+  (cond [(empty? alos) (error 'list-pick "list too short")]
+        [(= n 0) (first alos)]
+        [(> n 0) (list-pick.v2 (rest alos) (sub1 n))]))
+
+;; Exercise 391
+
+; replace-eol-with: [List-of Number] [List-of Number] -> [List-of Number]
+; replaces the final '() in front with end
+(check-expect (replace-eol-with.v2 '() '())
+              '())
+(check-expect (replace-eol-with.v2 '() '(a b))
+              '(a b))
+(check-expect (replace-eol-with.v2 (cons 1 '()) '())
+              (cons 1 '()))
+(check-expect (replace-eol-with.v2 (cons 1 '()) '(a))
+              (cons 1 '(a)))
+(check-expect (replace-eol-with.v2 (cons 2 (cons 1 '())) '(a))
+              (cons 2 (cons 1 '(a))))
+
+#;
+(define (replace-eol-with.v2 front end)
+  (cond [(and (empty? front)
+              (empty? end)) '()]
+        [(and (empty? front)
+              (cons?  end)) end]
+        [(and (cons?  front)
+              (empty? end)) front]
+        [(and (cons?  front)
+              (cons?  end))
+         (cons (first front)
+               (replace-eol-with.v2 (rest front) end))]))
+
+#;
+(define (replace-eol-with.v2 front end)
+  (cond [(empty? front) end]
+        [(and (cons?  front)
+              (empty? end)) front]
+        [else
+         (cons (first front)
+               (replace-eol-with.v2 (rest front) end))]))
+
+(define (replace-eol-with.v2 front end)
+  (cond [(empty? front) end]
+        [else
+         (cons (first front)
+               (replace-eol-with.v2 (rest front) end))]))
