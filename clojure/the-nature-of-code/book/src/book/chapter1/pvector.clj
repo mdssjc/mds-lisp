@@ -13,6 +13,10 @@
   {:x (- (:x v1) (:x v2))
    :y (- (:y v1) (:y v2))})
 
+(defn mult [v1 n]
+  {:x (* (:x v1) n)
+   :y (* (:y v1) n)})
+
 
 
 ;; Unit Testing
@@ -21,5 +25,6 @@
 (def b (make-pvector 3 4))
 
 (deftest pvector-tests
-  (is {:x 8 :y 6}  (add a b))
-  (is {:x 2 :y -2} (sub a b)))
+  (is {:x 8  :y  6} (add a b))
+  (is {:x 2  :y -2} (sub a b))
+  (is {:x 10 :y  4} (mult a 2)))
