@@ -346,3 +346,22 @@
                            (branch-left  tos)
                            (branch-right tos))
                        (rest path))]))
+
+
+
+;; 23.5 Designing Functions that Consume Two Complex Inputs
+
+
+;; =================
+;; Data definitions:
+
+; An LOD is one of:
+; - '()
+; - (cons Direction LOD)
+
+; A TID is one of:
+; - Symbol
+; - (make-binary TID TID)
+; - (make-with TID Symbol TID)
+(define-struct with [lft info rght])
+(define-struct binary [lft rght])
