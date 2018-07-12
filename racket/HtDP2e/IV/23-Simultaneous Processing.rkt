@@ -365,3 +365,70 @@
 ; - (make-with TID Symbol TID)
 (define-struct with [lft info rght])
 (define-struct binary [lft rght])
+
+
+
+;; 23.6 Finger Exercises: Two Inputs
+
+;; Exercise 393
+
+
+;; =================
+;; Data definitions:
+
+; A Son.L is one of:
+; - empty
+; - (cons Number Son.L)
+;
+; Son is used when it
+; applies to Son.L and Son.R
+
+; A Son.R is one of:
+; - empty
+; - (cons Number Son.R)
+;
+; Constraint If s is a Son.R,
+; no number occurs twice in s
+
+(define S0 '())
+(define S1 '(1 3 5))
+(define S2 '(2 4 6))
+
+
+;; =================
+;; Functions:
+
+; Son Son -> Son
+; produces one that contains the elements of both
+(check-expect (union S0 S0) S0)
+(check-expect (union S1 S0) S1)
+(check-expect (union S0 S2) S2)
+(check-expect (union S1 S2) (append S1 S2))
+(check-expect (union S1 S1) (append S1 S1))
+(check-expect (union S2 S2) (append S2 S2))
+
+(define (union s1 s2)
+  (append s1 s2))
+
+; Son Son -> Son
+; produces the set of exactly those elements that occur in both
+(check-expect (intersect S0 S0) S0)
+(check-expect (intersect S1 S0) S1)
+(check-expect (intersect S0 S2) S2)
+(check-expect (intersect S1 S2) (append S1 S2))
+(check-expect (intersect S1 S1) S1)
+(check-expect (intersect S2 S2) S2)
+
+(define (intersect s1 s2)
+  (local (; Son Son -> Son
+          (define (diff x l)
+            (cond [(empty? x) '()]
+                  [else
+                   (if (member? (first x) l)
+                       (diff    (rest  x) l)
+                       (cons (first x)
+                             (diff (rest x) l)))])))
+    (cond [(or (empty? s1)
+               (empty? s2)) (append s1 s2)]
+          [else
+           (append s1 (diff s2 s1))])))
