@@ -1,36 +1,34 @@
 (ns book.introduction.exampleI2
-  (:require [quil.core :as q]))
+  (:require [quil.core :as q]
+            [quil.middleware :as m]))
 
 ;; Example I.2: Random number distribution
 
-(def WIDTH  640)
-(def HEIGHT 240)
-(def LENGTH 20)
-
-(def randomCounts (atom (vec (replicate LENGTH 0))))
-
 (defn setup []
-  ;; ---
-  )
+  (vec (replicate 20 0)))
 
-(defn draw []
+(defn draw [state]
   (q/background 255)
   (q/stroke 0)
   (q/fill 175)
 
-  (let [length (count @randomCounts)
-        index  (int (q/random length))
-        w      (/ WIDTH length)]
-    (swap! randomCounts update index inc)
-
+  (let [length (count state)
+        w      (/ (q/width) length)]
     (dotimes [x length]
-      (let [element (get @randomCounts x)]
+      (let [element (get state x)]
         (q/rect (* x w)
-                (- HEIGHT element)
+                (- (q/height) element)
                 (- w 1)
                 element)))))
 
+(defn update-state [state]
+  (let [length (count state)
+        index  (int (q/random length))]
+    (update state index inc)))
+
 (q/defsketch run
-  :size  [WIDTH HEIGHT]
-  :setup setup
-  :draw  draw)
+  :size   [640 240]
+  :setup  setup
+  :draw   draw
+  :update update-state
+  :middleware [m/fun-mode])

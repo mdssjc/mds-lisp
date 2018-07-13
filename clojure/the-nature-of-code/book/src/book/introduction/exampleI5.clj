@@ -1,26 +1,33 @@
 (ns book.introduction.exampleI5
   (:require [quil.core :as q]
-            [book.introduction.walker :as walker]))
+            [quil.middleware :as m]
+            [book.introduction.walker :as w]))
 
 ;; Example I.5: Perlin noise walker
 
-(def tx (atom 0.0))
-(def ty (atom 10000.0))
+(defn setup []
+  (assoc (w/setup)
+         :tx 0.0
+         :ty 10000.0))
 
-(defn step [x y]
-  (let [newx (q/map-range (q/noise @tx) 0 1 0 walker/WIDTH)
-        newy (q/map-range (q/noise @ty) 0 1 0 walker/HEIGHT)]
-
-    (swap! tx (fn [_] (+ @tx 0.01)))
-    (swap! ty (fn [_] (+ @ty 0.01)))
-
-    [newx newy]))
-
-(defn draw [x y]
+(defn draw [state]
   (q/background 255)
-  (q/ellipse x y 16 16))
+  (q/ellipse (:x state) (:y state) 16 16))
+
+(defn update-state [state]
+  (let [tx (:tx state)
+        ty (:ty state)]
+    (assoc (w/step state
+                   (fn [x y]
+                     (let [newx (q/map-range (q/noise tx) 0 1 0 (q/width))
+                           newy (q/map-range (q/noise ty) 0 1 0 (q/height))]
+                       [newx newy])))
+           :tx (+ tx 0.01)
+           :ty (+ ty 0.01))))
 
 (q/defsketch run
-  :size  walker/SIZE
-  :setup walker/setup
-  :draw  #(walker/draw step draw))
+  :size   [640 360]
+  :setup  setup
+  :draw   draw
+  :update update-state
+  :middleware [m/fun-mode])
