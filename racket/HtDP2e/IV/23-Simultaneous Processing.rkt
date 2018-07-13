@@ -455,3 +455,42 @@
                   (cons x (merge (rest lon1) lon2))]
                  [else
                   (cons y (merge lon1 (rest lon2)))]))]))
+
+;; Exercise 395
+
+; take: [List-of X] Natural -> [List-of X]
+; produces the first n items from l or all of l if it is too short
+(check-expect (take '() 0) '())
+(check-expect (take '() 5) '())
+(check-expect (take '(1 2 3 4 5) 0) '())
+(check-expect (take '(1 2 3 4 5) 1) '(1))
+(check-expect (take '(1 2 3 4 5) 2) '(1 2))
+(check-expect (take '(1 2 3 4 5) 5) '(1 2 3 4 5))
+(check-expect (take '(1 2 3 4 5) 6) '(1 2 3 4 5))
+(check-expect (take '(a b c) 3) '(a b c))
+(check-expect (take '(a b c) 4) '(a b c))
+
+(define (take l n)
+  (cond [(or (empty? l)
+             (zero?  n)) '()]
+        [else
+         (cons (first l)
+               (take (rest l) (sub1 n)))]))
+
+; drop: [List-of X] Natural -> [List-of X]
+; result is l with the first n items removed or just ’() if l is too short
+(check-expect (drop '() 0) '())
+(check-expect (drop '() 5) '())
+(check-expect (drop '(1 2 3 4 5) 0) '(1 2 3 4 5))
+(check-expect (drop '(1 2 3 4 5) 1) '(2 3 4 5))
+(check-expect (drop '(1 2 3 4 5) 2) '(3 4 5))
+(check-expect (drop '(1 2 3 4 5) 5) '())
+(check-expect (drop '(1 2 3 4 5) 6) '())
+(check-expect (drop '(a b c) 2) '(c))
+(check-expect (drop '(a b c) 1) '(b c))
+
+(define (drop l n)
+  (cond [(or (empty? l)
+             (zero?  n)) l]
+        [else
+         (drop (rest l) (sub1 n))]))
