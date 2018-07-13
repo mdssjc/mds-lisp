@@ -398,7 +398,7 @@
 ;; =================
 ;; Functions:
 
-; Son Son -> Son
+; union: Son Son -> Son
 ; produces one that contains the elements of both
 (check-expect (union S0 S0) S0)
 (check-expect (union S1 S0) S1)
@@ -410,7 +410,7 @@
 (define (union s1 s2)
   (append s1 s2))
 
-; Son Son -> Son
+; intersect: Son Son -> Son
 ; produces the set of exactly those elements that occur in both
 (check-expect (intersect S0 S0) S0)
 (check-expect (intersect S1 S0) S1)
@@ -432,3 +432,26 @@
                (empty? s2)) (append s1 s2)]
           [else
            (append s1 (diff s2 s1))])))
+
+;; Exercise 394
+
+; merge: [List-of Number] [List-of Number] -> [List-of Number]
+; produces a single sorted list of numbers that contains all the numbers on both inputs lists
+; Invariant: sorted in ascending order
+(check-expect (merge S0 S0) '())
+(check-expect (merge S1 S0) S1)
+(check-expect (merge S0 S2) S2)
+(check-expect (merge S1 S2) '(1 2 3 4 5 6))
+(check-expect (merge S1 S1) '(1 1 3 3 5 5))
+(check-expect (merge S2 S2) '(2 2 4 4 6 6))
+
+(define (merge lon1 lon2)
+  (cond [(empty? lon1) lon2]
+        [(empty? lon2) lon1]
+        [else
+         (local ((define x (first lon1))
+                 (define y (first lon2)))
+           (cond [(<= x y)
+                  (cons x (merge (rest lon1) lon2))]
+                 [else
+                  (cons y (merge lon1 (rest lon2)))]))]))
