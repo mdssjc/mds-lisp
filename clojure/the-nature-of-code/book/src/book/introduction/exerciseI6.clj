@@ -1,11 +1,20 @@
 (ns book.introduction.exerciseI6
   (:require [quil.core :as q]
-            [book.introduction.walker :as walker]))
+            [quil.middleware :as m]
+            [book.introduction.walker :as w]))
 
 ;; Exercise I.6
 
-(def x-prev (atom 0.0))
-(def y-prev (atom 0.0))
+(defn setup []
+  (assoc (w/setup)
+         :x-prev (/ (q/width)  2.0)
+         :y-prev (/ (q/height) 2.0)))
+
+(defn draw [state]
+  (q/stroke 0)
+  (q/stroke-weight 2)
+  (q/line (:x-prev state) (:y-prev state) (:x state) (:y state))
+  (w/display state))
 
 (defn montecarlo []
   (let [r1          (q/random 1)
@@ -16,22 +25,19 @@
       r1
       (recur))))
 
-(defn rnd-normal [x y]
-  (let [stepsize (* (montecarlo) 10)
-        stepx    (q/random (- stepsize) stepsize)
-        stepy    (q/random (- stepsize) stepsize)]
-
-    (swap! x-prev (fn [_] x))
-    (swap! y-prev (fn [_] y))
-
-    [(+ x stepx) (+ y stepy)]))
-
-(defn draw [x y]
-  (q/stroke 0)
-  (q/stroke-weight 2)
-  (q/line @x-prev @y-prev x y))
+(defn update-state [state]
+  (assoc (w/step state
+                 (fn [x y]
+                   (let [stepsize (* (montecarlo) 10)
+                         stepx    (q/random (- stepsize) stepsize)
+                         stepy    (q/random (- stepsize) stepsize)]
+                     [(+ x stepx) (+ y stepy)])))
+         :x-prev (:x state)
+         :y-prev (:y state)))
 
 (q/defsketch run
-  :size  walker/SIZE
-  :setup walker/setup
-  :draw  #(walker/draw rnd-normal draw))
+  :size   [640 360]
+  :setup  setup
+  :draw   draw
+  :update update-state
+  :middleware [m/fun-mode])
