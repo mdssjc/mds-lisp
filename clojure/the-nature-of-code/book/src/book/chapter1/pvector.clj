@@ -21,6 +21,12 @@
   {:x (/ (:x v) n)
    :y (/ (:y v) n)})
 
+(defn mag [v]
+  (let [x (:x v)
+        y (:y v)]
+    (Math/sqrt (+ (* x x)
+                  (* y y)))))
+
 
 
 ;; Unit Testing
@@ -29,7 +35,8 @@
 (def b (make-pvector 3 4))
 
 (deftest pvector-tests
-  (is {:x 8   :y  6} (add  a b))
-  (is {:x 2   :y -2} (sub  a b))
-  (is {:x 10  :y  4} (mult a 2))
-  (is {:x 2.5 :y  1} (div  a 2)))
+  (is (= {:x 8   :y  6} (add  a b)))
+  (is (= {:x 2   :y -2} (sub  a b)))
+  (is (= {:x 10  :y  4} (mult a 2)))
+  (is (= {:x 5/2 :y  1} (div  a 2)))
+  (is (= 5.385164807134504 (mag a))))
