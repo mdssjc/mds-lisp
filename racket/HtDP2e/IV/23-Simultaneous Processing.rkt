@@ -5,6 +5,9 @@
 ;; IV - Intertwined Data
 ;; 23 - Simultaneous Processing
 
+(require 2htdp/image)
+(require 2htdp/universe)
+(require 2htdp/batch-io)
 
 
 ;; 23.1 Processing Two Lists Simultaneously: Case 1
@@ -494,3 +497,82 @@
              (zero?  n)) l]
         [else
          (drop (rest l) (sub1 n))]))
+
+;; Exercise 396
+
+
+;; =================
+;; Constants:
+
+; On OS X: /usr/share/dict/words
+; On LINUX: /usr/share/dict/words or /var/lib/dict/words
+; On WINDOWS: borrow the word file from your Linux friend
+(define LOCATION "/usr/share/dict/words")
+
+
+;; =================
+;; Data definitions:
+
+; A Letter is one of the following 1Strings:
+; - "a"
+; - ...
+; - "z"
+; or, equivalently, a member? of this list:
+
+; A Dictionary is a List-of-strings.
+(define AS-LIST (read-lines LOCATION))
+
+; A LoL is one of:
+; '()
+; (cons Letter LoL)
+; interpretation the list of Letters is a collection of Letter
+(define LETTERS (explode "abcdefghijklmnopqrstuvwxyz"))
+
+; An HM-Word is a [List-of Letter or "_"]
+; interpretation "_" represents a letter to be guessed
+
+
+;; =================
+;; Functions:
+
+; HM-Word N -> String
+; runs a simplistic hangman game, produces the current state
+(define (play the-pick time-limit)
+  (local ((define the-word  (explode the-pick))
+          (define the-guess (make-list (length the-word) "_"))
+          ; HM-Word -> HM-Word
+          (define (do-nothing s) s)
+          ; HM-Word KeyEvent -> HM-Word
+          (define (checked-compare current-status ke)
+            (if (member? ke LETTERS)
+                (compare-word the-word current-status ke)
+                current-status)))
+    (implode
+     (big-bang the-guess ; HM-Word
+               [to-draw render-word]
+               [on-tick do-nothing 1 time-limit]
+               [on-key  checked-compare]))))
+
+; HM-Word -> Image
+(define (render-word w)
+  (text (implode w) 22 "black"))
+
+; LoL HM-Word Letter -> HM-Word
+; produces s with all "_" where the guess revealed a letter
+(check-expect (compare-word (explode "START") (explode "_____") "S") (explode "S____"))
+(check-expect (compare-word (explode "START") (explode "S____") "T") (explode "ST__T"))
+(check-expect (compare-word (explode "START") (explode "ST__T") "G") (explode "ST__T"))
+
+(define (compare-word w g s)
+  (cond [(empty? w) '()]
+        [else
+         (cons (if (and (string=? (first g) "_")
+                        (string=? (first w) s))
+                   s (first g))
+               (compare-word (rest w) (rest g) s))]))
+
+
+;; Test Drive
+
+(local ((define SIZE (length AS-LIST)))
+  (play (list-ref AS-LIST (random SIZE)) 10))
