@@ -27,6 +27,10 @@
     (Math/sqrt (+ (* x x)
                   (* y y)))))
 
+(defn normalize [v]
+  (let [m (mag v)]
+    (div v m)))
+
 
 
 ;; Unit Testing
@@ -39,4 +43,5 @@
   (is (= {:x 2   :y -2} (sub  a b)))
   (is (= {:x 10  :y  4} (mult a 2)))
   (is (= {:x 5/2 :y  1} (div  a 2)))
-  (is (= 5.385164807134504 (mag a))))
+  (is (= 5.385164807134504 (mag a)))
+  (is (= {:x (/ 5 (mag a)) :y (/ 2 (mag a))} (normalize a))))
