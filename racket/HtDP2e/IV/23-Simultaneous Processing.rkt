@@ -535,7 +535,7 @@
 ;; =================
 ;; Functions:
 
-; HM-Word N -> String
+; play: HM-Word N -> String
 ; runs a simplistic hangman game, produces the current state
 (define (play the-pick time-limit)
   (local ((define the-word  (explode the-pick))
@@ -553,11 +553,11 @@
                [on-tick do-nothing 1 time-limit]
                [on-key  checked-compare]))))
 
-; HM-Word -> Image
+; render-word: HM-Word -> Image
 (define (render-word w)
   (text (implode w) 22 "black"))
 
-; LoL HM-Word Letter -> HM-Word
+; compare-word: LoL HM-Word Letter -> HM-Word
 ; produces s with all "_" where the guess revealed a letter
 (check-expect (compare-word (explode "START") (explode "_____") "S") (explode "S____"))
 (check-expect (compare-word (explode "START") (explode "S____") "T") (explode "ST__T"))
@@ -574,5 +574,37 @@
 
 ;; Test Drive
 
-(local ((define SIZE (length AS-LIST)))
-  (play (list-ref AS-LIST (random SIZE)) 10))
+;; (local ((define SIZE (length AS-LIST)))
+;;   (play (list-ref AS-LIST (random SIZE)) 10))
+
+;; Exercise 397
+
+
+;; =================
+;; Functions:
+
+; wages*.v3b: [List-of Employee] [List-of Work-Record] -> [List-of Result]
+; produces a list of wage records, which contain the name and weekly wage of an
+; employee. The function signals an error if it cannot find an employee record
+; for a time card or vice versa
+(check-expect (wages*.v3b one-list-employee one-list-work-record)
+              (list (make-result "John"  (* 51.52 12))
+                    (make-result "Marie" (* 62.39 10))))
+(check-error (wages*.v3b one-list-employee (list (make-work-record "Jones" 6)))
+             "cannot find an employee record")
+
+(define (wages*.v3b loe low)
+  (local (;; [List-of Employee] Work-Record -> Wage
+          (define (get-wage loe w)
+            (cond [(empty? loe) (error "cannot find an employee record")]
+                  [else
+                   (local ((define e (first loe)))
+                     (if (equal? (employee-name e) (work-record-name w))
+                         (make-result (employee-name e)
+                                      (* (work-record-hours w)
+                                         (employee-pay-rate e)))
+                         (get-wage (rest loe) w)))])))
+    (cond [(empty? low) '()]
+          [else
+           (cons (get-wage   loe (first low))
+                 (wages*.v3b loe (rest  low)))])))
