@@ -594,7 +594,7 @@
              "cannot find an employee record")
 
 (define (wages*.v3b loe low)
-  (local (;; [List-of Employee] Work-Record -> Wage
+  (local (; [List-of Employee] Work-Record -> Wage
           (define (get-wage loe w)
             (cond [(empty? loe) (error "cannot find an employee record")]
                   [else
@@ -608,3 +608,18 @@
           [else
            (cons (get-wage   loe (first low))
                  (wages*.v3b loe (rest  low)))])))
+
+;; Exercise 398
+
+; [List-of Number] [List-of Number] -> Number
+; produces the value of the combination for these values
+(check-expect (value '(5)      '(10))     50)
+(check-expect (value '(5 17)   '(10 1))   67)
+(check-expect (value '(5 17 3) '(10 1 2)) 73)
+
+(define (value lol lov)
+  (cond [(empty? lol) 0]
+        [else
+         (+ (* (first lol)
+               (first lov))
+            (value (rest lol) (rest lov)))]))
