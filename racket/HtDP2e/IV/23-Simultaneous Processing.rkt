@@ -623,3 +623,91 @@
          (+ (* (first lol)
                (first lov))
             (value (rest lol) (rest lov)))]))
+
+;; Exercise 399
+
+
+;; =================
+;; Data definitions:
+
+; A 1String is a String of length 1,
+; including
+; - "\\" (the backslash),
+; - " " (the space bar),
+; - "\t" (tab),
+; - "\r" (return), and
+; - "\b" (backspace).
+; interpretation represents keys on the keyboard
+
+
+;; =================
+;; Functions:
+
+; [List-of String] -> [List-of String]
+; picks a random non-identity arrangement of names
+(define (gift-pick names)
+  (random-pick
+   (non-same names (arrangements names))))
+
+; [List-of String] -> [List-of [List-of String]]
+; returns all possible permutations of names
+(check-expect (arrangements '()) '(()))
+(check-expect (arrangements '("d" "e"))
+              '(("d" "e")
+                ("e" "d")))
+
+(define (arrangements w)
+  (local (; 1String [List-of String] -> [List-of String]
+          (define (insert-everywhere/in-all-words 1s los)
+            (cond [(empty? los) '()]
+                  [else
+                   (append (insert-everywhere/in-word 1s '()  (first los))
+                           (insert-everywhere/in-all-words 1s (rest  los)))]))
+
+          ; 1String String String -> [List-of String]
+          (define (insert-everywhere/in-word 1s sp ss)
+            (cond [(empty? ss) (list (append sp (list 1s) ss))]
+                  [else
+                   (cons (append sp (list 1s) ss)
+                         (insert-everywhere/in-word 1s
+                                                    (append sp (list (first ss)))
+                                                    (rest ss)))])))
+    (cond [(empty? w) (list '())]
+          [else
+           (insert-everywhere/in-all-words (first w)
+                                           (arrangements (rest w)))])))
+
+; [NEList-of X] -> X
+; returns a random item from the list
+(check-random (random-pick '(1 2 3 4 5))
+              (local ((define n (random (length '(1 2 3 4 5)))))
+                (cond [(= n 0) 1]
+                      [(= n 1) 2]
+                      [(= n 2) 3]
+                      [(= n 3) 4]
+                      [(= n 4) 5])))
+
+(define (random-pick l)
+  (local (; [NEList-of X] Natural -> X
+          (define (pick l n)
+            (cond [(zero? n) (first l)]
+                  [else
+                   (pick (rest l) (sub1 n))])))
+    (pick l (random (length l)))))
+
+; [List-of String] [List-of [List-of String]] -> [List-of [List-of String]]
+; produces the list of those lists in ll that do
+; not agree with names at any place
+(check-expect (non-same '("name1 name2 name3") '(("name1 name2 name3")
+                                                 ("att1 att2 att3")
+                                                 ("param1 param2 param3")))
+              '(("att1 att2 att3")
+                ("param1 param2 param3")))
+
+(define (non-same names ll)
+  (cond [(empty? ll) '()]
+        [else
+         (if (equal? names   (first ll))
+             (non-same names (rest ll))
+             (cons (first ll)
+                   (non-same names (rest ll))))]))
