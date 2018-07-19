@@ -611,7 +611,7 @@
 
 ;; Exercise 398
 
-; [List-of Number] [List-of Number] -> Number
+; value: [List-of Number] [List-of Number] -> Number
 ; produces the value of the combination for these values
 (check-expect (value '(5)      '(10))     50)
 (check-expect (value '(5 17)   '(10 1))   67)
@@ -643,13 +643,13 @@
 ;; =================
 ;; Functions:
 
-; [List-of String] -> [List-of String]
+; gift-pick: [List-of String] -> [List-of String]
 ; picks a random non-identity arrangement of names
 (define (gift-pick names)
   (random-pick
    (non-same names (arrangements names))))
 
-; [List-of String] -> [List-of [List-of String]]
+; arrangements: [List-of String] -> [List-of [List-of String]]
 ; returns all possible permutations of names
 (check-expect (arrangements '()) '(()))
 (check-expect (arrangements '("d" "e"))
@@ -677,7 +677,7 @@
            (insert-everywhere/in-all-words (first w)
                                            (arrangements (rest w)))])))
 
-; [NEList-of X] -> X
+; random-pick: [NEList-of X] -> X
 ; returns a random item from the list
 (check-random (random-pick '(1 2 3 4 5))
               (local ((define n (random (length '(1 2 3 4 5)))))
@@ -695,7 +695,7 @@
                    (pick (rest l) (sub1 n))])))
     (pick l (random (length l)))))
 
-; [List-of String] [List-of [List-of String]] -> [List-of [List-of String]]
+; non-same: [List-of String] [List-of [List-of String]] -> [List-of [List-of String]]
 ; produces the list of those lists in ll that do
 ; not agree with names at any place
 (check-expect (non-same '("name1 name2 name3") '(("name1 name2 name3")
@@ -711,3 +711,60 @@
              (non-same names (rest ll))
              (cons (first ll)
                    (non-same names (rest ll))))]))
+
+;; Exercise 400
+
+
+;; =================
+;; Data definitions:
+
+; DNA is one of:
+; - a
+; - c
+; - g
+; - t
+; interpretation represents DNA descriptions
+(define DNA1 '(a c g t t g))
+(define DNA2 '(a a c g t t g))
+(define DNAS '(a c g t t g t a c t g))
+
+
+;; =================
+;; Functions:
+
+; DNAprefix: [List-of DNA] [List-of DNA] -> Boolean
+; returns #true if the pattern is identical to the initial part of the search string;
+; otherwise it returns #false
+(check-expect (DNAprefix '()  DNAS) #true)
+(check-expect (DNAprefix DNA1 '())  #false)
+(check-expect (DNAprefix DNA1 DNAS) #true)
+(check-expect (DNAprefix DNA2 DNAS) #false)
+
+(define (DNAprefix p s)
+  (cond [(empty? p) #true]
+        [(empty? s) #false]
+        [else
+         (and (symbol=? (first p)
+                        (first s))
+              (DNAprefix (rest p)
+                         (rest s)))]))
+
+; DNAdelta: [List-of DNA] [List-of DNA] -> [List-of DNA] or False
+; returns the first item in the search string beyond the pattern
+(check-expect (DNAdelta '()  DNAS) DNAS)
+(check-expect (DNAdelta DNA1 '())  #false)
+(check-expect (DNAdelta DNA1 DNAS) '(t a c t g))
+(check-expect (DNAdelta DNA2 DNAS) #false)
+(check-error  (DNAdelta DNA1 DNA1) "no DNA letter beyond the pattern")
+
+(define (DNAdelta p s)
+  (cond [(empty? p) s]
+        [(empty? s) #false]
+        [else
+         (cond [(equal? p s) (error "no DNA letter beyond the pattern")]
+               [else
+                (if (symbol=? (first p)
+                              (first s))
+                    (DNAdelta (rest p)
+                              (rest s))
+                    #false)])]))
