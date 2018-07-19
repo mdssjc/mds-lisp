@@ -1,5 +1,5 @@
 (ns book.chapter1.example6
-    (:require [quil.core :as q]
+  (:require [quil.core :as q]
             [quil.middleware :as m]
             [book.chapter1.pvector :as v]))
 
