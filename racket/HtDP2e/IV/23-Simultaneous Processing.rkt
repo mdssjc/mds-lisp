@@ -768,3 +768,47 @@
                     (DNAdelta (rest p)
                               (rest s))
                     #false)])]))
+
+;; Exercise 401
+
+
+;; =================
+;; Data definitions:
+
+; An S-expr (S-expression) is one of:
+; - Atom
+; - [List-of S-expr]
+;
+; An Atom is one of:
+; - Number
+; - String
+; - Symbol
+
+
+;; =================
+;; Functions:
+
+; sexp=?: S-expr S-expr -> Boolean
+; determines whether two S-expressions are equal
+(check-expect (sexp=? 'a 'a)   #true)
+(check-expect (sexp=? 'a 'b)   #false)
+(check-expect (sexp=? '() "a") #false)
+(check-expect (sexp=? '(a b c) '(a b c))   #true)
+(check-expect (sexp=? '(a b c) '(a b "c")) #false)
+
+(define (sexp=? s1 s2)
+  (local (; Atom -> Boolean
+          (define (atom? a)
+            (or (number? a)
+                (string? a)
+                (symbol? a))))
+    (cond [(and (atom? s1)
+                (atom? s2)) (equal? s1 s2)]
+          [(or (atom? s1)
+               (atom? s2)) #false]
+          [(and (empty? s1)
+                (empty? s2)) #true]
+          [else
+           (if (sexp=? (first s1) (first s2))
+               (sexp=? (rest  s1) (rest  s2))
+               #false)])))
