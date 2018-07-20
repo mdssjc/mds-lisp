@@ -812,3 +812,8 @@
            (if (sexp=? (first s1) (first s2))
                (sexp=? (rest  s1) (rest  s2))
                #false)])))
+
+;; Exercise 402
+
+;; The hint results in the final process of optimizing the processing of two
+;; lists.
