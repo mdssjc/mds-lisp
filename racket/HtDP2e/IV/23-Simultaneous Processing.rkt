@@ -887,3 +887,53 @@
 
 (define presence-schema.v2 `(,(make-spec "Present"     boolean?)
                              ,(make-spec "Description" string?)))
+
+
+;; =================
+;; Functions:
+
+; integrity-check: DB -> Boolean
+; do all rows in db satisfy (I1) and (I2)
+;; (check-expect (integrity-check school-db)   #true)
+;; (check-expect (integrity-check presence-db) #true)
+
+#;
+(define (integrity-check db)
+  (local (; Row -> Boolean
+          ; does row satisfy (I1) and (I2)
+          (define (row-integrity-check row)
+            (and (length-of-row-check row)
+                 (check-every-cell row)))
+          (define (length-of-row-check row)
+            (= (length row) (length (db-schema db))))
+          (define (check-every-cell row)
+            (andmap cell-integrity-check row)))
+    (andmap row-integrity-check (db-content db))))
+
+;; Exercise 404
+
+
+;; =================
+;; Functions:
+
+; andmap2: [X X -> Boolean] [List-of X] [List-of X] -> Boolean
+; is like andmap but for two lists
+(check-expect (andmap2 (lambda (x y)
+                         (and (number? x)
+                              (number? y)))
+                       '(1 2 3 4 5)
+                       '(1 2 3 4 5)) #true)
+(check-expect (andmap2 (lambda (x y)
+                         (and (number? x)
+                              (number? y)))
+                       '(1 2 3 4 5)
+                       '(1 2 3 a 5)) #false)
+
+(define (andmap2 f lox1 lox2)
+  (cond [(empty? lox1) #true]
+        [else
+         (and (f (first lox1)
+                 (first lox2))
+              (andmap2 f
+                       (rest lox1)
+                       (rest lox2)))]))
