@@ -1,4 +1,4 @@
-(ns book.introduction.exerciseI9
+(ns book.introduction.exercise9
   (:require [quil.core :as q]
             [quil.middleware :as m]))
 

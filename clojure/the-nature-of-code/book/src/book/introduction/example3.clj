@@ -1,9 +1,9 @@
-(ns book.introduction.exerciseI1
+(ns book.introduction.example3
   (:require [quil.core :as q]
             [quil.middleware :as m]
             [book.introduction.walker :as w]))
 
-;; Exercise I.1
+;; Example I.3: Walker that tends to move to the right
 
 (defn setup []
   (w/setup))
@@ -14,9 +14,11 @@
 (defn update-state [state]
   (w/step state
           (fn [x y]
-            (let [stepx (+ x (q/random -1 2))
-                  stepy (+ y (q/random -1 2))]
-              [stepx stepy]))))
+            (let [r (q/random 1)]
+              (cond (< r 0.4) [(inc x) y]
+                    (< r 0.6) [(dec x) y]
+                    (< r 0.8) [x (inc y)]
+                    :else     [x (dec y)])))))
 
 (q/defsketch run
   :size   [640 360]

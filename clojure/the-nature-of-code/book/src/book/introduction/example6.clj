@@ -1,4 +1,4 @@
-(ns book.introduction.exampleI6
+(ns book.introduction.example6
   (:require [quil.core :as q]))
 
 ;; Example I.6: 2D Perlin noise

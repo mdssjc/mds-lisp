@@ -1,4 +1,4 @@
-(ns book.introduction.exampleI5
+(ns book.introduction.example5
   (:require [quil.core :as q]
             [quil.middleware :as m]
             [book.introduction.walker :as w]))

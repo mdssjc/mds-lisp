@@ -1,9 +1,9 @@
-(ns book.introduction.exampleI1
+(ns book.introduction.exercise1
   (:require [quil.core :as q]
             [quil.middleware :as m]
             [book.introduction.walker :as w]))
 
-;; Example I.1: Traditional random walk
+;; Exercise I.1
 
 (defn setup []
   (w/setup))
@@ -14,11 +14,9 @@
 (defn update-state [state]
   (w/step state
           (fn [x y]
-            (let [choice (int (q/random 4))]
-              (cond (== choice 0) [(inc x) y]
-                    (== choice 1) [(dec x) y]
-                    (== choice 2) [x (inc y)]
-                    :else         [x (dec y)])))))
+            (let [stepx (+ x (q/random -1 2))
+                  stepy (+ y (q/random -1 2))]
+              [stepx stepy]))))
 
 (q/defsketch run
   :size   [640 360]

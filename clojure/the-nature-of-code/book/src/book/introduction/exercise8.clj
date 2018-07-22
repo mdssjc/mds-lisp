@@ -1,4 +1,4 @@
-(ns book.introduction.exerciseI8
+(ns book.introduction.exercise8
   (:require [quil.core :as q]))
 
 ;; Exercise I.8
