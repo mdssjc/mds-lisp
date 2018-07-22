@@ -1,5 +1,4 @@
-(ns book.chapter1.pvector
-  (:use clojure.test))
+(ns book.chapter1.pvector)
 
 (defn make-pvector [x y]
   {:x x
@@ -31,17 +30,7 @@
   (let [m (mag v)]
     (div v m)))
 
-
-
-;; Unit Testing
-
-(def a (make-pvector 5 2))
-(def b (make-pvector 3 4))
-
-(deftest pvector-tests
-  (is (= {:x 8   :y  6} (add  a b)))
-  (is (= {:x 2   :y -2} (sub  a b)))
-  (is (= {:x 10  :y  4} (mult a 2)))
-  (is (= {:x 5/2 :y  1} (div  a 2)))
-  (is (= 5.385164807134504 (mag a)))
-  (is (= {:x (/ 5 (mag a)) :y (/ 2 (mag a))} (normalize a))))
+(defn limit [v max]
+  (if (> (mag v) max)
+    (normalize v)
+    (mult v max)))
