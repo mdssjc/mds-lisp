@@ -1,12 +1,14 @@
 (ns book.chapter1.example7
   (:require [quil.core :as q]
             [quil.middleware :as m]
-            [book.chapter1.mover :as mover]))
+            [book.chapter1.mover :as mover]
+            [book.chapter1.pvector :as v]))
 
 ;; Example 1.7: Motion 101 (velocity)
 
 (defn setup []
-  (mover/make-mover))
+  (assoc (mover/make-mover) :velocity (v/make-pvector (q/random -2 2)
+                                                      (q/random -2 2))))
 
 (defn draw [state]
   (q/background 255)
