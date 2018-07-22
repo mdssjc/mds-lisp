@@ -11,10 +11,11 @@
 (defn update [m]
   (let [velocity (v/add (:velocity m)
                         (:acceleration m))]
-    {:location     (v/add (:location m)
-                          velocity)
-     :velocity     velocity
-     :acceleration (:acceleration m)}))
+    (assoc m
+           :location (v/add (:location m)
+                            velocity)
+           :velocity velocity
+           :acceleration (:acceleration m))))
 
 (defn display [m]
   (q/stroke 0)
@@ -26,12 +27,12 @@
 (defn check-edges [m]
   (let [x (get-in m [:location :x])
         y (get-in m [:location :y])]
-    {:location     (v/make-pvector
-                    (cond (> x (q/width)) 0
-                          (< x 0)         (q/width)
-                          :else           x)
-                    (cond (> y (q/height)) 0
-                          (< y 0)          (q/height)
-                          :else            y))
-     :velocity     (:velocity m)
-     :acceleration (:acceleration m)}))
+    (assoc m
+           :location (v/make-pvector (cond (> x (q/width)) 0
+                                           (< x 0)         (q/width)
+                                           :else           x)
+                                     (cond (> y (q/height)) 0
+                                           (< y 0)          (q/height)
+                                           :else            y))
+           :velocity (:velocity m)
+           :acceleration (:acceleration m))))

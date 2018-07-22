@@ -26,11 +26,17 @@
     (Math/sqrt (+ (* x x)
                   (* y y)))))
 
+(defn mag-sg [v]
+  (let [x (:x v)
+        y (:y v)]
+    (+ (* x x)
+       (* y y))))
+
 (defn normalize [v]
   (let [m (mag v)]
     (div v m)))
 
 (defn limit [v max]
-  (if (> (mag v) max)
-    (normalize v)
-    (mult v max)))
+  (if (> (mag-sg v) (* max max))
+    (mult (normalize v) max)
+    v))
