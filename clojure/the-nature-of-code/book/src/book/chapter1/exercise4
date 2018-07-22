@@ -3,7 +3,7 @@ Exercise 1.4
 Write the limit() function for the PVector class.
 
 void limit(float max) {
-  if (mag() > max) {
+  if (magSg() > (* max max)) {
     normalize();
     mult(max);
   }
