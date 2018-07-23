@@ -40,3 +40,7 @@
   (if (> (mag-sg v) (* max max))
     (mult (normalize v) max)
     v))
+
+(defn random2d []
+  (make-pvector (dec (rand 2))
+                (dec (rand 2))))
