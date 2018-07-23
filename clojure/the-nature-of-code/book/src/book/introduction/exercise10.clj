@@ -4,6 +4,9 @@
             [book.introduction.landscape :as ls]))
 
 ;; Exercise I.10
+;;
+;; Use the noise values as the elevations of a landscape. See the screenshot
+;; below as a reference.
 
 (defn setup []
   (assoc (ls/make-landscape 20 800 400) :theta 0.0))

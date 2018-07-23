@@ -3,6 +3,9 @@
             [quil.middleware :as m]))
 
 ;; Exercise I.9
+;;
+;; Add a third argument to noise that increments once per cycle through draw()
+;; to animate the two-dimensional noise.
 
 (defn setup []
   0)

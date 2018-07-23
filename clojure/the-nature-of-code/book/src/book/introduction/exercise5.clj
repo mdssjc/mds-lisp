@@ -4,6 +4,10 @@
             [book.introduction.walker :as w]))
 
 ;; Exercise I.5
+;;
+;; A Gaussian random walk is defined as one in which the step size (how far the
+;; object moves in a given direction) is generated with a normal distribution.
+;; Implement this variation of our random walk.
 
 (defn setup []
   (assoc (w/setup)

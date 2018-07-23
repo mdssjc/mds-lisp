@@ -4,6 +4,9 @@
             [book.introduction.walker :as w]))
 
 ;; Exercise I.1
+;;
+;; Create a random walker that has a tendency to move down and to the
+;; right.
 
 (defn setup []
   (w/setup))

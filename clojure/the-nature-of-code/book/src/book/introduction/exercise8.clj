@@ -2,6 +2,9 @@
   (:require [quil.core :as q]))
 
 ;; Exercise I.8
+;;
+;; Play with color, noiseDetail(), and the rate at which xoff and yoff are
+;; incremented to achieve different visual effects.
 
 (defn setup []
   (q/no-loop))

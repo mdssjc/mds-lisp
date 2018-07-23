@@ -4,6 +4,9 @@
             [book.introduction.walker :as w]))
 
 ;; Exercise I.3
+;;
+;; Create a random walker with dynamic probabilities. For example, can you give
+;; it a 50% chance of moving in the direction of the mouse?
 
 (defn setup []
   (w/setup))
