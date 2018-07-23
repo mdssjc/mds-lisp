@@ -1,4 +1,4 @@
-(ns book.chapter1.example8
+(ns book.chapter1.example9
   (:require [quil.core :as q]
             [quil.middleware :as m]
             [book.chapter1.mover :as mover]
