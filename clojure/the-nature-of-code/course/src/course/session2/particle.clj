@@ -26,16 +26,16 @@
   (q/stroke 0)
   (q/stroke-weight 2)
   (q/fill 255 127)
-  (q/ellipse (get-in p [:position :x])
-             (get-in p [:position :y])
+  (q/ellipse (.x (:position p))
+             (.y (:position p))
              (* (:mass p) 16)
              (* (:mass p) 16)))
 
 (defn check-edges [p]
-  (if (> (get-in p [:position :y]) (q/height))
-    (let [velocity-x (get-in p [:velocity :x])
-          velocity-y (* (get-in p [:velocity :y]) -0.9)
-          position-x (get-in p [:position :x])]
+  (if (> (.y (:position p)) (q/height))
+    (let [velocity-x (.x (:velocity p))
+          velocity-y (* (.y (:velocity p)) -0.9)
+          position-x (.x (:position p))]
       (assoc p
              {:position (new PVector position-x (q/height))
               :velocity (new PVector velocity-x velocity-y)}))
