@@ -4,9 +4,9 @@
 
 (defn make-particle [m x y]
   {:mass         m
-   :position     (new Particle x y)
-   :velocity     (new Particle 0 0)
-   :acceleration (new Particle 0 0)})
+   :position     (new PVector x y)
+   :velocity     (new PVector 0 0)
+   :acceleration (new PVector 0 0)})
 
 (defn apply-force
   "Newton's 2nd law: F = M * A or A = F / M"
