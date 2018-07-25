@@ -4,23 +4,22 @@
 
 (defn make-particle [m x y]
   {:mass         m
-   :position     (new PVector x y)
-   :velocity     (new PVector 0 0)
-   :acceleration (new PVector 0 0)})
+   :position     (PVector. x y)
+   :velocity     (PVector. 0 0)
+   :acceleration (PVector. 0 0)})
 
 (defn apply-force
   "Newton's 2nd law: F = M * A or A = F / M"
   [p force]
   (let [f (PVector/div force (:mass p))]
-    (assoc p {:acceleration (PVector/add p f)})))
+    (assoc p :acceleration (.add (:acceleration p) f))))
 
 (defn update [p]
-  (let [velocity (PVector/add p (:acceleration p))
-        position (PVector/add p velocity)]
-    (assoc p
-           {:position     position
-            :velocity     velocity
-            :acceleration 0})))
+  (let [velocity (.add (:velocity p) (:acceleration p))
+        position (.add (:position p) velocity)]
+    (assoc p :position     position
+             :velocity     velocity
+             :acceleration 0)))
 
 (defn display [p]
   (q/stroke 0)
@@ -36,7 +35,6 @@
     (let [velocity-x (.x (:velocity p))
           velocity-y (* (.y (:velocity p)) -0.9)
           position-x (.x (:position p))]
-      (assoc p
-             {:position (new PVector position-x (q/height))
-              :velocity (new PVector velocity-x velocity-y)}))
+      (assoc p :position (PVector. position-x (q/height))
+               :velocity (PVector. velocity-x velocity-y)))
     p))

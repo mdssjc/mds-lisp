@@ -9,27 +9,27 @@
    :h h
    :c c})
 
-(defn contains [p m]
-  (let [l (:position m)
-        x (.x l)
-        y (.y l)]
-    (and (> x (:x p))
-         (< x (+ (:x p)
-                 (:w p)))
-         (> y (:y p))
-         (< y (+ (:y p)
-                 (:h p))))))
+(defn contains [l m]
+  (let [ml (:position m)
+        x  (.x ml)
+        y  (.y ml)]
+    (and (> x (:x l))
+         (< x (+ (:x l)
+                 (:w l)))
+         (> y (:y l))
+         (< y (+ (:y l)
+                 (:h l))))))
 
-(defn calculate-drag [p m]
+(defn calculate-drag [l m]
   (let [speed          (.mag (:velocity m))
-        drag-magnitude (* (:c p) speed speed)
+        drag-magnitude (* (:c l) speed speed)
         drag-force     (.copy (:velocity m))]
-    (.setMag (PVector/mult drag-force -1)) drag-magnitude))
+    (.setMag (.mult drag-force -1)) drag-magnitude))
 
-(defn display [p]
+(defn display [l]
   (q/no-stroke)
   (q/fill 50)
-  (q/rect (:x p)
-          (:y p)
-          (:w p)
-          (:h p)))
+  (q/rect (:x l)
+          (:y l)
+          (:w l)
+          (:h l)))
