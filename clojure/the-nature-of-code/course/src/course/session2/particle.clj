@@ -11,15 +11,16 @@
 (defn apply-force
   "Newton's 2nd law: F = M * A or A = F / M"
   [p force]
-  (let [f (PVector/div force (:mass p))]
-    (assoc p :acceleration (.add (:acceleration p) f))))
+  (let [f  (.get force)
+        mf (.div (.get force) (float (:mass p)))]
+    (assoc p :acceleration (.add (:acceleration p) mf))))
 
 (defn update [p]
   (let [velocity (.add (:velocity p) (:acceleration p))
         position (.add (:position p) velocity)]
     (assoc p :position     position
              :velocity     velocity
-             :acceleration 0)))
+             :acceleration (PVector. 0 0))))
 
 (defn display [p]
   (q/stroke 0)

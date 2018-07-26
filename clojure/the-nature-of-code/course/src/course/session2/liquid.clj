@@ -24,7 +24,7 @@
   (let [speed          (.mag (:velocity m))
         drag-magnitude (* (:c l) speed speed)
         drag-force     (.copy (:velocity m))]
-    (.setMag (.mult drag-force -1)) drag-magnitude))
+    (.setMag (.mult drag-force -1) drag-magnitude)))
 
 (defn display [l]
   (q/no-stroke)
