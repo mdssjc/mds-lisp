@@ -937,3 +937,77 @@
               (andmap2 f
                        (rest lox1)
                        (rest lox2)))]))
+
+
+(define (integrity-check db)
+  (local (; Row -> Boolean
+          ; does row satisfy (I1) and (I2)
+          (define (row-integrity-check row)
+            (and (= (length row)
+                    (length (db-schema db)))
+                 (andmap (lambda (s c) [(second s) c])
+                         (db-schema db)
+                         row))))
+    (andmap row-integrity-check (db-content db))))
+
+(define (integrity-check.v2 db)
+  (local ((define schema (db-schema db))
+          ; Row -> Boolean
+          ; does row satisfy (I1) and (I2)
+          (define (row-integrity-check row)
+            (and (= (length row) (length schema))
+                 (andmap (lambda (s c) [(second s) c])
+                         schema
+                         row))))
+    (andmap row-integrity-check (db-content db))))
+
+(define (integrity-check.v3 db)
+  (local ((define schema  (db-schema db))
+          (define content (db-content db))
+          (define width   (length schema))
+          ; Row -> Boolean
+          ; does row satisfy (I1) and (I2)
+          (define (row-integrity-check row)
+            (and (= (length row) width)
+                 (andmap (lambda (s c) [(second s) c])
+                         schema
+                         row))))
+    (andmap row-integrity-check content)))
+
+; DB [List-of Label] -> DB
+; retains a column from db if its label is in labels
+(define (project db labels)
+  (local ((define schema  (db-schema db))
+          (define content (db-content db))
+          ; Spec -> Boolean
+          ; does this spec belong to the new schema
+          (define (keep? c)
+            (member? (first c) labels))
+          ; Row -> Row
+          ; retains those columns whose name is in labels
+          (define (row-project row) ...))
+    (make-db (filter keep? schema)
+             (map row-project content))))
+
+; Row [List-of Label] -> Row
+; retains those cells whose corresponding element
+; in names is also in labels
+(define (row-filter row names)
+  '())
+
+(define projected-content
+  `(("Alice" #true)
+    ("Bob"   #false)
+    ("Carol" #true)
+    ("Dave"  #false)))
+
+(define projected-schema
+  `(("Name" ,string?) ("Present" ,boolean?)))
+
+(define projected-db
+  (make-db projected-schema projected-content))
+
+(check-expect (project school-db '("Name" "Present"))
+              projected-db)
+(check-expect (db-content (project school-db '("Name" "Present")))
+              projected-content)
