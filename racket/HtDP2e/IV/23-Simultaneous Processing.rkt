@@ -1028,6 +1028,7 @@
 
 
 ;; Exercise 406
+;; Exercise 407
 
 ; DB [List-of Label] -> DB
 ; retains a column from db if its label is in labels
@@ -1047,17 +1048,10 @@
           ; Row -> Row
           ; retains those columns whose name is in labels
           (define (row-project row)
-            (row-filter row schema-labels))
-
-          ; Row [List-of Label] -> Row
-          ; retains those cells whose name is in labels
-          (define (row-filter row names)
-            (cond
-              [(empty? names) '()]
-              [else
-               (if (member? (first names) labels)
-                   (cons (first row)
-                         (row-filter (rest row) (rest names)))
-                   (row-filter (rest row) (rest names)))])))
+            (foldr (lambda (r n result)
+                     (if (member? n labels)
+                         (cons r result)
+                         result))
+                   '() row schema-labels)))
     (make-db (filter keep? schema)
              (map row-project content))))
