@@ -976,6 +976,11 @@
 
 ; DB [List-of Label] -> DB
 ; retains a column from db if its label is in labels
+;; (check-expect (project school-db '("Name" "Present"))
+;;               projected-db)
+(check-expect (db-content (project school-db '("Name" "Present")))
+              projected-content)
+
 (define (project db labels)
   (local ((define schema  (db-schema db))
           (define content (db-content db))
@@ -1021,7 +1026,38 @@
 (define projected-db
   (make-db projected-schema projected-content))
 
-;; (check-expect (project school-db '("Name" "Present"))
-;;               projected-db)
-(check-expect (db-content (project school-db '("Name" "Present")))
+
+;; Exercise 406
+
+; DB [List-of Label] -> DB
+; retains a column from db if its label is in labels
+(check-expect (db-content (project.v1 school-db '("Name" "Present")))
               projected-content)
+
+(define (project.v1 db labels)
+  (local ((define schema  (db-schema db))
+          (define content (db-content db))
+          (define schema-labels (map first schema))
+
+          ; Spec -> Boolean
+          ; does this column belong to the new schema
+          (define (keep? c)
+            (member? (first c) labels))
+
+          ; Row -> Row
+          ; retains those columns whose name is in labels
+          (define (row-project row)
+            (row-filter row schema-labels))
+
+          ; Row [List-of Label] -> Row
+          ; retains those cells whose name is in labels
+          (define (row-filter row names)
+            (cond
+              [(empty? names) '()]
+              [else
+               (if (member? (first names) labels)
+                   (cons (first row)
+                         (row-filter (rest row) (rest names)))
+                   (row-filter (rest row) (rest names)))])))
+    (make-db (filter keep? schema)
+             (map row-project content))))
