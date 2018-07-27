@@ -995,10 +995,11 @@
 ; Row [List-of Label] -> Row
 ; retains those cells whose corresponding element
 ; in names is also in labels
-(check-expect (row-filter '("Alice" 35 #true) '("Name" "Age" "Present")) '("Alice"))
-(check-expect (row-filter '(35 #true) '("Age" "Present")) '())
+(check-expect (row-filter '("Alice" 35 #true) '("Name" "Age" "Present")) '("Alice" #true))
+(check-expect (row-filter '(35 #true) '("Age" "Present")) '(#true))
+(check-expect (row-filter '() '("Age" "Present")) '())
 
-(define labels '("Name"))
+(define labels '("Name" "Present"))
 
 (define (row-filter row names)
   (cond [(empty? row) '()]
@@ -1022,6 +1023,5 @@
 
 ;; (check-expect (project school-db '("Name" "Present"))
 ;;               projected-db)
-;; (check-expect (db-content (project school-db '("Name" "Present")))
-;;               projected-content)
-
+(check-expect (db-content (project school-db '("Name" "Present")))
+              projected-content)
