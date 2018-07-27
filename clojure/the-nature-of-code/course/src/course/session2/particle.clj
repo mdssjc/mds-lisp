@@ -21,21 +21,3 @@
     (assoc p :position     position
              :velocity     velocity
              :acceleration (PVector. 0 0))))
-
-(defn display [p]
-  (q/stroke 0)
-  (q/stroke-weight 2)
-  (q/fill 255 127)
-  (q/ellipse (.x (:position p))
-             (.y (:position p))
-             (* (:mass p) 16)
-             (* (:mass p) 16)))
-
-(defn check-edges [p]
-  (if (> (.y (:position p)) (q/height))
-    (let [velocity-x (.x (:velocity p))
-          velocity-y (* (.y (:velocity p)) -0.9)
-          position-x (.x (:position p))]
-      (assoc p :position (PVector. position-x (q/height))
-               :velocity (PVector. velocity-x velocity-y)))
-    p))
