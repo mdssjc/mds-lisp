@@ -998,11 +998,13 @@
 (check-expect (row-filter '("Alice" 35 #true) '("Name" "Age" "Present")) '("Alice"))
 (check-expect (row-filter '(35 #true) '("Age" "Present")) '())
 
+(define labels '("Name"))
+
 (define (row-filter row names)
   (cond [(empty? row) '()]
         [else
          (local ((define filtered (row-filter (rest row) (rest names))))
-           (if (member? (first names) '("Name"))
+           (if (member? (first names) labels)
                (cons (first row) filtered)
                filtered))]))
 
