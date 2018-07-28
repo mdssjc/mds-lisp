@@ -7,5 +7,5 @@
                  [quil "2.7.1"]
                  [cider/orchard "0.4.0-SNAPSHOT"]]
   :plugins [[refactor-nrepl    "2.4.0-SNAPSHOT"]
-            [cider/cider-nrepl "0.19.0-SNAPSHOT"]]
+            [cider/cider-nrepl "0.18.0-SNAPSHOT"]]
   :main course.core)
