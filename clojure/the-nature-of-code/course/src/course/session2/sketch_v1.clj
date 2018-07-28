@@ -1,4 +1,4 @@
-(ns course.session2.sketch
+(ns course.session2.sketch-v1
   (:import [processing.core PVector])
   (:require [quil.core :as q]
             [quil.middleware :as m]
