@@ -21,7 +21,6 @@
                (* mass m)
                (* mass m))))
 
-
 (defn draw [state]
   (q/background 51)
 
