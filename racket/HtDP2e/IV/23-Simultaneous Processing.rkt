@@ -1048,10 +1048,49 @@
           ; Row -> Row
           ; retains those columns whose name is in labels
           (define (row-project row)
-            (foldr (lambda (r n result)
-                     (if (member? n labels)
+            (foldr (lambda (r label result)
+                     (if (member? label labels)
                          (cons r result)
                          result))
                    '() row schema-labels)))
     (make-db (filter keep? schema)
              (map row-project content))))
+
+
+; DB [List-of Label] -> DB
+; retains a column from db if its label is in labels
+(check-expect (db-content (project.v2 school-db '("Name" "Present")))
+              projected-content)
+
+(define (project.v2 db labels)
+  (local ((define schema  (db-schema db))
+          (define content (db-content db))
+
+          ; Spec -> Boolean
+          ; does this column belong to the new schema
+          (define (keep? c)
+            (member? (first c) labels))
+
+          ; Row -> Row
+          ; retains those columns whose name is in labels
+          (define (row-project row)
+            (foldr (lambda (cell m c) (if m (cons cell c) c))
+                   '()
+                   row
+                   mask))
+          (define mask (map keep? schema)))
+    (make-db (filter keep? schema)
+             (map row-project content))))
+
+;; Exercise 408
+
+; DB [List-of String] [Row -> Boolean] -> DB
+; result is a list of rows that satisfy the given predicate, projected down to
+; the given set of labels
+(check-expect (db-content (select school-db '("Name" "Present") (lambda (r)
+                                                                  (map string? r))))
+              '((#true #false) (#true #false) (#true #false) (#true #false)))
+
+(define (select db labels predicate)
+  (project.v2 (make-db (db-schema db)
+                       (map predicate (db-content db))) labels))
