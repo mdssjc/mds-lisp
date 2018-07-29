@@ -1084,13 +1084,45 @@
 
 ;; Exercise 408
 
-; DB [List-of String] [Row -> Boolean] -> DB
+; DB [List-of Label] [Row -> Boolean] -> DB
 ; result is a list of rows that satisfy the given predicate, projected down to
 ; the given set of labels
 (check-expect (db-content (select school-db '("Name" "Present") (lambda (r)
                                                                   (map string? r))))
-              '((#true #false) (#true #false) (#true #false) (#true #false)))
+              '((#true #false)
+                (#true #false)
+                (#true #false)
+                (#true #false)))
 
 (define (select db labels predicate)
   (project.v2 (make-db (db-schema db)
                        (map predicate (db-content db))) labels))
+
+;; Exercise 409
+
+; DB [List-of Label] -> DB
+; produces a database like db but with its columns reordered according to lol
+(check-expect (db-content (reorder school-db '("Age" "Name" "Present")))
+              '((35 "Alice" #true)
+                (25 "Bob"   #false)
+                (30 "Carol" #true)
+                (32 "Dave"  #false)))
+
+(define (reorder db lol)
+  (local ((define schema  (db-schema db))
+          (define content (db-content db))
+
+          ; String -> Number
+          (define (find-order l)
+            (local ((define (find-order-helper l s n)
+                      (if (equal? l (first (first s)))
+                          n
+                          (find-order-helper l (rest s) (add1 n)))))
+              (find-order-helper l schema 0)))
+
+          ; Row -> Row
+          (define (reorder-row row)
+            (map (lambda (n) (list-ref row n)) (map find-order lol))))
+
+    (make-db (reorder-row schema)
+             (map reorder-row content))))
