@@ -39,8 +39,8 @@
              (check-edges
               (p/update
                (if (q/mouse-pressed?)
-                 (p/apply-force (p/apply-force p gravity) wind)
-                 (p/apply-force p wind))))))
+                 (p/apply-force (p/apply-force p wind) gravity)
+                 (p/apply-force p gravity))))))
          state)))
 
 (defn mouse-pressed [state event]
