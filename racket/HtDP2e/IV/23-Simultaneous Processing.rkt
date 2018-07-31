@@ -1148,3 +1148,63 @@
                                  y
                                  (cons x y)))
                            content2 content1))))
+
+;; Exercise 411
+
+; join: DB DB -> DB
+; creates a database from db-1 by replacing the last cell in each row with the
+; translation of the cell in db-2
+(check-expect (db-content (join school-db (make-db presence-schema
+                                                   '((#true  "presence")
+                                                     (#true  "here")
+                                                     (#false "absence")
+                                                     (#false "there")))))
+              (db-content (make-db `(("Name"        ,string?)
+                                     ("Age"         ,integer?)
+                                     ("Description" ,string?))
+                                   '(("Alice" 35 "presence")
+                                     ("Alice" 35 "here")
+                                     ("Bob"   25 "absence")
+                                     ("Bob"   25 "there")
+                                     ("Carol" 30 "presence")
+                                     ("Carol" 30 "here")
+                                     ("Dave"  32 "absence")
+                                     ("Dave"  32 "there")))))
+
+(define (join db-1 db-2)
+  (local ((define schema1  (db-schema  db-1))
+          (define schema2  (db-schema  db-2))
+          (define content1 (db-content db-1))
+          (define content2 (db-content db-2))
+
+          ; List List -> List
+          (define (join-lists s1 s2)
+            (append (reverse (rest (reverse s1)))
+                    (rest s2)))
+
+          ; Any -> [List-of Row]
+          (define (find-row key)
+            (foldl (lambda (row result)
+                     (if (equal? key (first row))
+                         (cons row result)
+                         result))
+                   '() content2))
+
+          ; List -> Item
+          (define (last l)
+            (cond
+              [(empty? (rest l)) (first l)]
+              [else
+               (last (rest l))]))
+
+          ; Row -> [List-of Row]
+          (define (join-row row)
+            (map (lambda (x)
+                 (join-lists row x))
+               (find-row (last row)))))
+
+    (make-db (join-lists schema1 schema2)
+             (reverse (foldl (lambda (row result)
+                               (append (join-row row)
+                                       result))
+                             '() content1)))))
