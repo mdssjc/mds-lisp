@@ -974,7 +974,7 @@
                          row))))
     (andmap row-integrity-check content)))
 
-; DB [List-of Label] -> DB
+; project: DB [List-of Label] -> DB
 ; retains a column from db if its label is in labels
 ;; (check-expect (project school-db '("Name" "Present"))
 ;;               projected-db)
@@ -997,7 +997,7 @@
 
 ;; Exercise 405
 
-; Row [List-of Label] -> Row
+; row-filter: Row [List-of Label] -> Row
 ; retains those cells whose corresponding element
 ; in names is also in labels
 (check-expect (row-filter '("Alice" 35 #true) '("Name" "Age" "Present")) '("Alice" #true))
@@ -1030,7 +1030,7 @@
 ;; Exercise 406
 ;; Exercise 407
 
-; DB [List-of Label] -> DB
+; project.v1: DB [List-of Label] -> DB
 ; retains a column from db if its label is in labels
 (check-expect (db-content (project.v1 school-db '("Name" "Present")))
               projected-content)
@@ -1057,7 +1057,7 @@
              (map row-project content))))
 
 
-; DB [List-of Label] -> DB
+; project.v2: DB [List-of Label] -> DB
 ; retains a column from db if its label is in labels
 (check-expect (db-content (project.v2 school-db '("Name" "Present")))
               projected-content)
@@ -1084,7 +1084,7 @@
 
 ;; Exercise 408
 
-; DB [List-of Label] [Row -> Boolean] -> DB
+; select: DB [List-of Label] [Row -> Boolean] -> DB
 ; result is a list of rows that satisfy the given predicate, projected down to
 ; the given set of labels
 (check-expect (db-content (select school-db '("Name" "Present") (lambda (r)
@@ -1100,7 +1100,7 @@
 
 ;; Exercise 409
 
-; DB [List-of Label] -> DB
+; reorder: DB [List-of Label] -> DB
 ; produces a database like db but with its columns reordered according to lol
 (check-expect (db-content (reorder school-db '("Age" "Name" "Present")))
               '((35 "Alice" #true)
@@ -1126,3 +1126,25 @@
 
     (make-db (reorder-row schema)
              (map reorder-row content))))
+
+;; Exercise 410
+
+; db-union: DB DB -> DB
+; produces a new database with this schema and the joint content of both
+; The function must eliminate rows with the exact same content
+ (check-expect (db-union school-db (make-db school-schema '(("Ada" 21 #false))))
+               (make-db school-schema '(("Alice" 35 #true)
+                                        ("Bob"   25 #false)
+                                        ("Carol" 30 #true)
+                                        ("Dave"  32 #false)
+                                        ("Ada"   21 #false))))
+
+(define (db-union d1 d2)
+  (local ((define schema   (db-schema  d1))
+          (define content1 (db-content d1))
+          (define content2 (db-content d2)))
+    (make-db schema (foldr (lambda (x y)
+                             (if (member? x y)
+                                 y
+                                 (cons x y)))
+                           content2 content1))))
