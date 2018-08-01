@@ -510,7 +510,7 @@
 
 
 
-;; 22.3 Domain-Specific Languages
+;; 22.3 - Domain-Specific Languages
 
 
 ;; =================
@@ -668,7 +668,7 @@
 
 
 
-;; 22.4 Reading XML
+;; 22.4 - Reading XML
 
 
 ;; =================

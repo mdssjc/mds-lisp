@@ -10,7 +10,7 @@
 (require 2htdp/batch-io)
 
 
-;; 23.1 Processing Two Lists Simultaneously: Case 1
+;; 23.1 - Processing Two Lists Simultaneously: Case 1
 
 
 ;; =================
@@ -54,7 +54,7 @@
 
 
 
-;; 23.2 Processing Two Lists Simultaneously: Case 2
+;; 23.2 - Processing Two Lists Simultaneously: Case 2
 
 
 ;; =================
@@ -183,7 +183,7 @@
 
 
 
-;; 23.3 Processing Two Lists Simultaneously: Case 3
+;; 23.3 - Processing Two Lists Simultaneously: Case 3
 
 
 ;; =================
@@ -266,7 +266,7 @@
 
 
 
-;; 23.4 Function Simplification
+;; 23.4 - Function Simplification
 
 
 ;; =================
@@ -352,7 +352,7 @@
 
 
 
-;; 23.5 Designing Functions that Consume Two Complex Inputs
+;; 23.5 - Designing Functions that Consume Two Complex Inputs
 
 
 ;; =================
@@ -371,7 +371,7 @@
 
 
 
-;; 23.6 Finger Exercises: Two Inputs
+;; 23.6 - Finger Exercises: Two Inputs
 
 ;; Exercise 393
 
@@ -820,7 +820,7 @@
 
 
 
-;; 23.7 Project: Database
+;; 23.7 - Project: Database
 
 
 ;; =================
