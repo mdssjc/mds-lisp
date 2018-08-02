@@ -41,6 +41,10 @@
     (mult (normalize v) max)
     v))
 
+(defn set-mag [v len]
+  (normalize v)
+  (mult v len))
+
 (defn random2d []
   (make-pvector (dec (rand 2))
                 (dec (rand 2))))
