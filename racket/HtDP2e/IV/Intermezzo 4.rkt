@@ -55,9 +55,42 @@
 (define MIN-POSITIVE (create-inex 1 -1 99))
 
 
-;; (check-expect (inex+ (create-inex 1 1 0) (create-inex 2 1 0)) (create-inex 3 1 0))
-;; (check-expect (inex+ (create-inex 55 1 0) (create-inex 55 1 0)) (create-inex 11 1 1))
-;; (check-expect (inex+ (create-inex 56 1 0) (create-inex 56 1 0)) (create-inex 11 1 1))
 ;; (check-expect (inex* (create-inex 2 1 4) (create-inex 8 1 10)) (create-inex 16 1 14))
 ;; (check-expect (inex* (create-inex 20 1 1) (create-inex  5 1 4)) (create-inex 10 1 6))
 ;; (check-expect (inex* (create-inex 27 -1 1) (create-inex  7 1 4)) (create-inex 19 1 4))
+
+;; Exercise 412
+
+
+;; =================
+;; Functions:
+
+; inex+: Inex Inex -> Inex
+; adds two Inex representations of numbers that have the same exponent
+(check-expect (inex+ (create-inex 1 1 0)
+                     (create-inex 2 1 0))
+              (create-inex 3 1 0))
+(check-expect (inex+ (create-inex 55 1 0)
+                     (create-inex 55 1 0))
+              (create-inex 11 1 1))
+(check-expect (inex+ (create-inex 56 1 0)
+                     (create-inex 56 1 0))
+              (create-inex 11 1 1))
+(check-error  (inex+ (create-inex 56 1 0)
+                     (create-inex 56 1 1))
+              "out of range")
+
+(define (inex+ inex1 inex2)
+  (local ((define (normalize m s e)
+            (local ((define range? (> m 99)))
+              (create-inex (if range? (quotient m 10) m)
+                           s
+                           (if range? (add1 e) e)))))
+    (cond [(= (inex-exponent inex1)
+              (inex-exponent inex2))
+           (normalize (+ (inex-mantissa inex1)
+                         (inex-mantissa inex2))
+                      (inex-sign inex1)
+                      (inex-exponent inex1))]
+          [else
+           (error "out of range")])))
