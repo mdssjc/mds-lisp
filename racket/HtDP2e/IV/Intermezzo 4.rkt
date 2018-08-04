@@ -10,13 +10,6 @@
 
 
 ;; =================
-;; Constants:
-
-(define MAX-POSITIVE (create-inex 99 1 99))
-(define MIN-POSITIVE (create-inex 1 -1 99))
-
-
-;; =================
 ;; Data definitions:
 
 (define-struct inex [mantissa sign exponent])
@@ -53,3 +46,18 @@
   (* (inex-mantissa an-inex)
      (expt 10 (* (inex-sign     an-inex)
                  (inex-exponent an-inex)))))
+
+
+;; =================
+;; Constants:
+
+(define MAX-POSITIVE (create-inex 99 1 99))
+(define MIN-POSITIVE (create-inex 1 -1 99))
+
+
+;; (check-expect (inex+ (create-inex 1 1 0) (create-inex 2 1 0)) (create-inex 3 1 0))
+;; (check-expect (inex+ (create-inex 55 1 0) (create-inex 55 1 0)) (create-inex 11 1 1))
+;; (check-expect (inex+ (create-inex 56 1 0) (create-inex 56 1 0)) (create-inex 11 1 1))
+;; (check-expect (inex* (create-inex 2 1 4) (create-inex 8 1 10)) (create-inex 16 1 14))
+;; (check-expect (inex* (create-inex 20 1 1) (create-inex  5 1 4)) (create-inex 10 1 6))
+;; (check-expect (inex* (create-inex 27 -1 1) (create-inex  7 1 4)) (create-inex 19 1 4))
