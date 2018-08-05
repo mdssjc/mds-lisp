@@ -2,8 +2,8 @@
   (:import [processing.core PVector])
   (:require [quil.core :as q]))
 
-(defn make-mover []
-  {:location     (PVector. 0 0)
+(defn make-mover [x y]
+  {:location     (PVector. x y)
    :velocity     (PVector. 0 0)
    :acceleration (PVector. 0 0)})
 
@@ -13,12 +13,13 @@
   (assoc m :acceleration (.add (:acceleration m) force)))
 
 (defn update [m]
-  (let [velocity (.add (:velocity m)
-                       (:acceleration m))]
+  (let [acceleration (:acceleration m)
+        velocity     (.add (:velocity m)
+                           acceleration)]
     (assoc m
            :location     (.add (:location m) velocity)
            :velocity     velocity
-           :acceleration (.mult (:acceleration m) 0))))
+           :acceleration (.mult acceleration 0))))
 
 (defn display [m]
   (q/ellipse 0 0 0 0))
