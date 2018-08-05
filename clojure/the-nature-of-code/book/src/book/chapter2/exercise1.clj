@@ -39,10 +39,11 @@
                                        :else          y)))))
 
 (defn update-state [state]
-  (let [wind (PVector. (q/map-range (q/noise (:xoff state)) 0 1 -0.005 0.005) 0)]
+  (let [wind   (PVector. (q/map-range (q/noise (:xoff state)) 0 1 -0.005 0.005) 0)
+        helium (PVector. 0 -0.001)]
     (-> state
         (mover/apply-force wind)
-        (mover/apply-force (PVector. 0 -0.001))
+        (mover/apply-force helium)
         (mover/update)
         (check-edges)
         (assoc :xoff (+ (:xoff state) 0.01)))))
