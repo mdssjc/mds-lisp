@@ -5,7 +5,6 @@
             [book.chapter2.mover :as mover]))
 
 ;; Example 2.1: Forces
-;; FIXME: corrigir a atualização dos valores do mover (com saltos)
 
 (defn setup []
   (mover/make-mover 30 30))
@@ -24,7 +23,8 @@
 (defn check-edges [m]
   (let [lx (.x (:location m))
         ly (.y (:location m))
-        v  (* (.x (:velocity m)) -1)
+        vx (.x (:velocity m))
+        vy (.y (:velocity m))
         w  (q/width)
         h  (q/height)]
     (assoc m
@@ -33,11 +33,11 @@
                                      :else    lx)
                                (cond (> ly h) h
                                      :else    ly))
-           :velocity (PVector. (cond (> lx w) v
-                                     (< lx 0) v
-                                     :else    lx)
-                               (cond (> ly h) (* (.y (:velocity m)) -1)
-                                     :else    ly)))))
+           :velocity (PVector. (cond (> lx w) (* vx -1)
+                                     (< lx 0) (* vx -1)
+                                     :else    vx)
+                               (cond (> ly h) (* vy -1)
+                                     :else    vy)))))
 
 (defn update-state [state]
   (let [wind    (PVector. 0.01 0)
