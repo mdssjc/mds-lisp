@@ -13,7 +13,7 @@
     :velocity     (PVector. 0 0)
     :acceleration (PVector. 0 0)
     :mass         1})
-  ([x y m]
+  ([m x y]
    {:location     (PVector. x y)
     :velocity     (PVector. 0 0)
     :acceleration (PVector. 0 0)
