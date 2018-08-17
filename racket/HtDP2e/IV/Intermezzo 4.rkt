@@ -102,9 +102,9 @@
 ; additional increase of the output’s exponent
 (check-expect (inex* (create-inex 2 1 4) (create-inex 8 1 10))
               (create-inex 16 1 14))
-(check-expect (inex* (create-inex 20 1 1) (create-inex  5 1 4))
+(check-expect (inex* (create-inex 20 1 1) (create-inex 5 1 4))
               (create-inex 10 1 6))
-(check-expect (inex* (create-inex 27 -1 1) (create-inex  7 1 4))
+(check-expect (inex* (create-inex 27 -1 1) (create-inex 7 1 4))
               (create-inex 19 1 4))
 (check-error  (inex* (create-inex 10 1 99)
                      (create-inex 10 1 99))
@@ -112,24 +112,24 @@
 
 ;; FIXME: implementar os 2 últimos casos
 (define (inex* inex1 inex2)
-  (local ((define (normalize m s e)
-            (local ((define r (inexact->exact(log m 100))))
-              (create-inex (if (>= r 1)
-                               (inexact->exact (/ m (expt 10 r)))
-                               m)
-                           s
-                           (if (>= r 1)
-                               (+ e r)
-                               e))))
-          (define calc (normalize (* (inex-mantissa inex1)
-                                     (inex-mantissa inex2))
-                                  (inex-sign inex1)
-                                  (+ (inex-exponent inex1)
-                                     (inex-exponent inex2))))
+  (local ((define (div-by-10 n)
+            (cond [(> n 99) (div-by-10 (round (/ n 10)))]
+                  [else n]))
+          (define (normalize m s e)
+            (create-inex (div-by-10 m)
+                         s
+                         e))
+          (define result (normalize (* (inex-mantissa inex1)
+                                       (inex-mantissa inex2))
+                                    (inex-sign (cond [(> (inex-sign inex1)
+                                                         (inex-sign inex2)) inex1]
+                                                     [else
+                                                      inex2]))
+                                    (+ (inex-exponent inex1)
+                                       (inex-exponent inex2))))
           (define (range? inex)
             (and (<= 0 (inex-mantissa inex) 99)
                  (<= 0 (inex-exponent inex) 99))))
-    (if (range? calc)
-        calc
+    (if (range? result)
+        result
         (error "out of range"))))
-
