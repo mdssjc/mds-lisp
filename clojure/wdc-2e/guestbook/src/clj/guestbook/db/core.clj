@@ -1,13 +1,13 @@
 (ns guestbook.db.core
   (:require
-    [clj-time.jdbc]
-    [conman.core :as conman]
-    [mount.core :refer [defstate]]
-    [guestbook.config :refer [env]]))
+   [yesql.core :refer [defqueries]]
+   [config.core :refer [env]]))
 
-(defstate ^:dynamic *db*
-          :start (conman/connect! {:jdbc-url (env :database-url)})
-          :stop (conman/disconnect! *db*))
+(def conn
+  {:classname      "org.h2.Driver"
+   :connection-url (:database-url env)
+   :make-pool?     true
+   :naming         {:keys   clojure.string/lower-case
+                    :fields clojure.string/upper-case}})
 
-(conman/bind-connection *db* "sql/queries.sql")
-
+(defqueries "sql/queries.sql" {:connection conn})
