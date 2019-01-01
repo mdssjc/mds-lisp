@@ -11,6 +11,11 @@ Este repositório é destinado para os dialetos _Lisp_.
 
 * **the-nature-of-code**: livro e curso _The Nature of Code_ do autor _Daniel Shiffman_ [https://natureofcode.com](https://natureofcode.com "Book site") / [https://www.kadenze.com/courses/the-nature-of-code-ii/info?aID=1114009](https://www.kadenze.com/courses/the-nature-of-code-ii/info?aID=1114009 "Course site").
 
+## Emacs
+
+* **Doom**
+* **Spacemacs**
+
 ## Outros
 
 Em breve.
