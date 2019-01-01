@@ -18,4 +18,4 @@ Este repositório é destinado para os dialetos _Lisp_.
 
 ## Outros
 
-Em breve.
+_Em breve_.
