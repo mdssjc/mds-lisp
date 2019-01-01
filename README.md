@@ -4,7 +4,7 @@ Este repositório é destinado para os dialetos _Lisp_.
 
 ## Racket
 
-* **HtC1x**: curso _How to Code: Simple Data_ do professor _Gregor Kiczales_;
+* **HtC1x**: curso _How to Code: Simple Data_ do professor _Gregor Kiczales_ [How to Code: Simple Data](https://www.edx.org/course/how-code-simple-data-ubcx-htc1x "How to Code: Simple Data");
 * **HtDP2e**: livro _How to Design Programs, Second Edition_ dos autores _Matthias Felleisen_, _Robert Bruce Findler_, _Matthew Flatt_ e _Shriram Krishnamurthi_ [http://www.htdp.org](http://www.htdp.org "Book site").
 
 ## Clojure
