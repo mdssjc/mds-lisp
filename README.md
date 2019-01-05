@@ -13,8 +13,8 @@ Este repositório é destinado para os dialetos _Lisp_.
 
 ## Emacs
 
-* **Doom**
-* **Spacemacs**
+* **Doom**: _startkit_ para o _Emacs_;
+* **Spacemacs**: _startkit_ para o _Emacs_.
 
 ## Outros
 
