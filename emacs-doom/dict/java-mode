@@ -1,0 +1,9 @@
+true	[literal]
+false	[literal]
+public
+private
+protect
+public static	[constant]
+public static int	[constant]
+public static String	[constant]
+public class
