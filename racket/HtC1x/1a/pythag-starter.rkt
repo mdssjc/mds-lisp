@@ -11,7 +11,7 @@
 ;; tells us that:
 ;;
 ;; Triangle: 3 4 ?
-;; Square Root (3^2 + 4^2)
+;; Square Root (3² + 4²)
 ;;
 ;; Write a BSL expression that produces the the value of ? for this triangle
 ;; where the other two sides have lengths 3 and 4.
