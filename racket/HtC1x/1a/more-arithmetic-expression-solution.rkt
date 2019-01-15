@@ -2,7 +2,7 @@
 ;; about the language level of this file in a form that our tools can easily process.
 #reader(lib "htdp-beginner-reader.ss" "lang")((modname more-arithmetic-expression-solution) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 ;; more-arithmetic-expression-solution.rkt
-;; BSL P1
+;; BSL P1 - More Arithmetic Expressions
 ;; Write more arithmetic expressions.
 
 

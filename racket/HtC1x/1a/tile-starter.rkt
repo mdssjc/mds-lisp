@@ -2,7 +2,7 @@
 ;; about the language level of this file in a form that our tools can easily process.
 #reader(lib "htdp-beginner-reader.ss" "lang")((modname tile-starter) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 ;; tile-starter.rkt
-;; BSL P3
+;; BSL P3 - Tile
 ;; Create an image using image composition primitives.
 
 (require 2htdp/image)
