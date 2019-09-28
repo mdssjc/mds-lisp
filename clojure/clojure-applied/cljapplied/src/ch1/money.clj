@@ -1,10 +1,10 @@
 (ns ch1.money)
 
-(declare validate-same-currency) 
+(declare validate-same-currency)
 
 (defrecord Currency [divisor sym desc])
 
-(defrecord Money [amount ^Currency currency] 
+(defrecord Money [amount ^Currency currency]
   java.lang.Comparable
     (compareTo [m1 m2]
       (validate-same-currency m1 m2)
@@ -26,7 +26,7 @@
   ([m1 m2 & monies]
     (every? zero? (map #(.compareTo m1 %) (conj monies m2)))))
 
-(defn +$ 
+(defn +$
   ([m1] m1)
   ([m1 m2]
     (validate-same-currency m1 m2)
