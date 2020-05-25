@@ -1,0 +1,2 @@
+{:deps {org.clojure.typed/runtime.jvm {:mvn/version "1.0.1"}}
+ :aliases {:dev {:extra-deps {org.clojure.typed/checker.jvm {:mvn/version "1.0.1"}}}}}
