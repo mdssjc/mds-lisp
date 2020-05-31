@@ -1,5 +1,15 @@
-(ns examples
+(ns main
   (:require [clojure.core.typed :as t]))
+
+;;
+;; Category: The Essence of Composition
+;;
+;; Arrows as Functions
+;; Properties of Composition
+;; Composition is the Essence of Programming
+;; Challenges
+;;
+
 
 ;; A, B, C and D are objects
 ;; f, g and h are morphisms
@@ -16,7 +26,6 @@
 (defn h [c]
   c)
 
-
 ;; Composition Function
 
 (t/ann compose [f g -> x])
@@ -26,7 +35,6 @@
 
 (compose (compose f g) h)
 (comp h g f)
-
 
 ;; Identity Function
 
