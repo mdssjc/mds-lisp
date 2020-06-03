@@ -62,3 +62,48 @@
     (str/join " " [w1 w2 w3 "..."])))
 
 (ellipsize "The quick brown fox jumps over the lazy dog.")
+
+(defn shout
+  ([s] (clojure.string/upper-case s))
+  {:tag String})
+(meta #'shout)
+
+(defn is-small? [number]
+  (if (< number 100)
+    "yes"
+    (do
+      (println "Saw a big number" number)
+      "no")))
+
+(is-small? 50)
+(is-small? 50000)
+
+(loop [result [] x 5]
+  (if (zero? x)
+    result
+    (recur (conj result x) (dec x))))
+
+(defn countdown [result x]
+  (if (zero? x)
+    result
+    (recur (conj result x) (dec x))))
+
+(countdown [] 5)
+
+(into [] (take 5 (iterate dec 5)))
+(into [] (drop-last (reverse (range 6))))
+(vec (reverse (rest (range 6))))
+
+(defn indexed [coll] (map-indexed vector coll))
+(defn index-filter [pred coll]
+  (when pred
+    (for [[idx elt] (indexed coll) :when (pred elt)] idx)))
+(defn index-of-any [pred coll]
+  (first (index-filter pred coll)))
+
+(indexed "abcde")
+(index-filter #{\a \b} "abcdbbb")
+(index-filter #{\a \b} "xyz")
+(index-of-any #{\z \a} "zzabyycdxx")
+(index-of-any #{\b \y} "zzabyycdxx")
+(nth (index-filter #{:h} [:t :t :h :t :h :t :t :t :h :h]) 2)
