@@ -1,5 +1,5 @@
 (ns main
-  (:require [clojure.core.typed :as t]))
+  (:require [clojure.core.typed :refer :all]))
 
 ;;
 ;; Category: The Essence of Composition
@@ -14,21 +14,21 @@
 ;; A, B, C and D are objects
 ;; f, g and h are morphisms
 
-(t/ann f [A -> B])
+(ann f [A -> B])
 (defn f [a]
   a)
 
-(t/ann g [B -> C])
+(ann g [B -> C])
 (defn g [b]
   b)
 
-(t/ann h [C -> D])
+(ann h [C -> D])
 (defn h [c]
   c)
 
 ;; Composition Function
 
-(t/ann compose [f g -> x])
+(ann compose [f g -> x])
 (defn compose [f g]
   (fn [x]
     (f (g x))))
@@ -38,7 +38,7 @@
 
 ;; Identity Function
 
-(t/ann id [a -> a])
+(ann id [a -> a])
 (defn id [a]
   a)
 
