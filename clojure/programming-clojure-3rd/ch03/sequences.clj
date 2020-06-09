@@ -1,5 +1,6 @@
 (ns sequences
-  (:require [clojure.string :refer :all])
+  (:require [clojure.string :refer :all]
+            [clojure.set :as set])
   (:use [clojure.java.io :only (reader)])
   (:import java.io.File))
 
@@ -41,3 +42,28 @@
                 (count (filter non-blank? (line-seq rdr)))))))
 
 (clojure-loc (File. "."))
+
+
+(def song {:name "Agnus Dei"
+           :artist "Krzysztof Penderecki"
+           :album "Polish Requiem"
+           :genre "Classical"})
+
+(assoc song :kind "MPEG Audio File")
+(dissoc song :genre)
+(select-keys song [:name :artist])
+(merge song {:size 8118166 :time 507245})
+(merge-with
+ concat
+ {:rubble ["Barney"], :flintstone ["Fred"]}
+ {:rubble ["Betty"], :flintstone ["Wilma"]}
+ {:rubble ["Bam-Bam"], :flintstone ["Pebbles"]})
+
+
+(def languages #{"java" "c" "d" "clojure"})
+(def beverages #{"java" "chai" "pop"})
+
+(set/union languages beverages)
+(set/difference languages beverages)
+(set/intersection languages beverages)
+(set/select #(= 1 (count %)) languages)
