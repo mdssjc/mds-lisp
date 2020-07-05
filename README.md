@@ -10,7 +10,7 @@ Este repositório é destinado para os dialetos _Lisp_.
 ## Clojure
 
 * **programming-clojure-3rd**: livro _Programming Clojure, 3rd_ do autor _Alex Miller_.
-* **category-teory-for-programmers**: livro _Category Theory for Programmers_ do autor _Bartosz Milewski_.
+* **category-teory-for-programmers**: livro e curso _Category Theory for Programmers_ do autor _Bartosz Milewski_.
 * **the-nature-of-code**: livro e curso _The Nature of Code_ do autor _Daniel Shiffman_ [https://natureofcode.com](https://natureofcode.com "Book site") / [https://www.kadenze.com/courses/the-nature-of-code-ii/info?aID=1114009](https://www.kadenze.com/courses/the-nature-of-code-ii/info?aID=1114009 "Course site").
 * **clojure-applied**: livro _Clojure Applied - From Practice to Practitioner_ dos autores _Ben Vandgrift_ e _Alex Miller_.
 
