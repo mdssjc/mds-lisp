@@ -70,3 +70,152 @@
 
 (count-heads-pairs [:h :h :h :t :h])
 (count-heads-pairs [:h :t :h :t :h])
+
+(defn by-pairs [coll]
+  (let [take-pair (fn [c]
+                    (when (next c) (take 2 c)))]
+    (lazy-seq (when-let [pair (seq (take-pair coll))]
+                (cons pair (by-pairs (rest coll)))))))
+
+(by-pairs [:h :t :t :h :h :h])
+
+(defn count-heads-pairs [coll]
+  (count (filter (fn [pair] (every? #(= :h %) pair))
+                 (by-pairs coll))))
+
+(count-heads-pairs [:h :h :h :t :h])
+(count-heads-pairs [:h :t :h :t :h])
+
+(partition 2 1 [:h :t :t :h :h :h])
+
+(def ^{:doc "Count items matching a filter"}
+  count-if (comp count filter))
+
+(defn count-runs
+  "Count runs of length n where pred is true in coll."
+  [n pred coll]
+  (count-if #(every? pred %) (partition n 1 coll)))
+
+(count-runs 2 #(= % :h) [:h :t :t :h :h :h])
+(count-runs 2 #(= % :t) [:h :t :t :h :h :h])
+(count-runs 3 #(= % :h) [:h :t :t :h :h :h])
+
+
+(def ^{:doc "Count runs of length two that are both heads"}
+  count-heads-pairs (partial count-runs 2 #(= % :h)))
+
+
+(declare my-odd? my-even?)
+
+(defn my-odd? [n]
+  (if (= n 0)
+    false
+    (my-even? (dec n))))
+
+(defn my-even? [n]
+  (if (= n 0)
+    true
+    (my-odd? (dec n))))
+
+(map my-even? (range 10))
+(map my-odd? (range 10))
+(my-even? (* 1000 1000 1000))
+
+;; Converting to Self-recursion
+
+(defn parity [n]
+  (loop [n n par 0]
+    (if (= n 0)
+      par
+      (recur (dec n) (- 1 par)))))
+
+(map parity (range 10))
+
+(defn my-even? [n] (= 0 (parity n)))
+(defn my-odd? [n] (= 1 (parity n)))
+
+;; Trampolining Mutual Recursion
+
+(declare my-odd? my-even?)
+
+(defn my-odd? [n]
+  (if (= n 0)
+    false
+    #(my-even? (dec n))))
+
+(defn my-even? [n]
+  (if (= n 0)
+    true
+    #(my-odd? (dec n))))
+
+(trampoline my-even? 1000000)
+
+;; Replacing Rercusion with Laziness
+
+(declare replace-symbol replace-symbol-expression)
+(defn replace-symbol [coll oldsym newsym]
+  (if (empty? coll)
+    ()
+    (cons (replace-symbol-expression (first coll) oldsym newsym)
+          (replace-symbol (rest coll) oldsym newsym))))
+(defn replace-symbol-expression [symbol-expr oldsym newsym]
+  (if (symbol? symbol-expr)
+    (if (= symbol-expr oldsym)
+      newsym
+      symbol-expr)
+    (replace-symbol symbol-expr oldsym newsym)))
+
+(defn deeply-nested [n]
+  (loop [n n result '(bottom)]
+    (if (= n 0)
+      result
+      (recur (dec n) (list result)))))
+
+(defn- coll-or-scalar [x & _] (if (coll? x) :collection :scalar))
+(defmulti replace-symbol coll-or-scalar)
+(defmethod replace-symbol :collection [coll oldsym newsym]
+  (lazy-seq (when (seq coll)
+              (cons (replace-symbol (first coll) oldsym newsym)
+                    (replace-symbol (rest coll) oldsym newsym)))))
+(defmethod replace-symbol :scalar [obj oldsym newsym]
+  (if (= obj oldsym)
+    newsym
+    obj))
+
+(set! *print-level* 25)
+
+(deeply-nested 5)
+(deeply-nested 25)
+
+(replace-symbol (deeply-nested 5) 'bottom 'deepest)
+(replace-symbol (deeply-nested 10000) 'bottom 'deepest)
+
+;; Shortcutting Recursion with Memoization
+
+(declare m f)
+(defn m [n]
+  (if (zero? n)
+    0
+    (- n (f (m (dec n))))))
+(defn f [n]
+  (if (zero? n)
+    1
+    (- n (m (f (dec n))))))
+
+(def m (memoize m))
+(def f (memoize f))
+
+(def m-seq (map m (iterate inc 0)))
+(def f-seq (map f (iterate inc 0)))
+
+(time (m 250))
+(m 10000)
+(nth m-seq 250)
+(time (nth m-seq 10000))
+
+
+(defn square [x] (* x x))
+(defn sum-squares-seq [n]
+  (vec (map square (range n))))
+(defn sum-squares [n]
+  (into [] (map square) (range n)))
