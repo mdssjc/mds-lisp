@@ -85,3 +85,6 @@
              (= (namespace ret) (:ns args)))))
 
 (stest/check 'clojure.core/symbol)
+
+
+(s/exercise (s/cat :ns (s/? string?) :name string?))
